@@ -1,0 +1,498 @@
+#pragma once
+
+
+#define PI 3.14159265358979323846f
+#define TAU 6.283185307179586f
+#include <math.h>
+
+#include "Matrix.h"
+#include "Vector.h"
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Vector4.h"
+#include "Matrix4.h"
+#include "Matrix3.h"
+#include "Matrix2.h"
+#include "Quaternion.h"
+
+#include "MathError.h"
+
+
+
+//Generic functions:
+
+namespace Math{
+
+
+	//Converts radians to degrees (rad * 180.f / PI)
+	inline float deg(float rad){ return rad * 180.f / PI; }
+
+	//Converts degrees to radians (deg * PI / 180.f)
+	inline float rad(float deg){ return deg * PI / 180.f; }
+
+	//Returns smaller of two numbers
+	inline float min(float a, float b){ return a > b ? b : a; }
+
+	//Returns larger of two numbers
+	inline float max(float a, float b){ return a < b ? b : a; }
+
+	//Clamps val between min and max
+	inline float clamp(float val, float min, float max){ return val < min ? min : val > max ? max : val; }
+
+}
+
+
+//Linear interpolations:
+
+namespace Math{
+
+	//Linearly interpolates two numbers. t gets clamped, so it can be any float (well... contain your NaNs, still)
+	inline float lerp(float v0, float v1, float t){
+		t = clamp(t, 0.f, 1.f);
+		return (1 - t) * v0 + t * v1;
+	}
+
+	//Linearly interpolates components of Vector2
+	inline Vector2 lerp(const Vector2& v1, const Vector2& v2, float t){
+		return Vector2(lerp(v1.x, v2.x, t), lerp(v1.y, v2.y, t));
+	}
+
+	//Linearly interpolates components of Vector3
+	inline Vector3 lerp(const Vector3& v1, const Vector3& v2, float t){
+		return Vector3(lerp(v1.x, v2.x, t), lerp(v1.y, v2.y, t), lerp(v1.z, v2.z, t));
+	}
+
+	//Linearly interpolates components of Vector4
+	inline Vector4 lerp(const Vector4& v1, const Vector4& v2, float t){
+		return Vector4(lerp(v1.x, v2.x, t), lerp(v1.y, v2.y, t), lerp(v1.z, v2.z, t), lerp(v1.w, v2.w, t));
+	}
+
+	//Linearly interpolates components of Vector
+	template<unsigned int size>
+	inline Vector<size> lerp(const Vector<size>& v1, const Vector<size>& v2, float t){
+		Vector<size> res;
+
+		for (unsigned int i = 0; i < size; ++i)
+			res.setElement(i, lerp(v1[i], v2[i], t));
+	
+		return res;
+	}
+
+	//Interpolates two Quaternions. There isn't a lot of speed variation, and lot cheaper than slerp. Finds the shortest path.
+	inline Quaternion nlerp(const Quaternion& q1, const Quaternion& q2, float t){
+		float dot = q1.dot(q2);
+		//Account for floating-point errors
+		dot = clamp(dot, -1.f, 1.f);
+
+		Quaternion q22 = q2;
+		if (dot < 0.f){
+			q22 = -1 * q2;
+			
+		}
+		
+		return Quaternion(lerp(q1.x, q22.x, t), lerp(q1.y, q22.y, t), lerp(q1.z, q22.z, t), lerp(q1.w, q22.w, t)).normalized();
+	
+	
+	}
+
+	//Linearly interpolates components of Vector2 and normalizes the result
+	inline Vector2 nlerp(const Vector2& v1, const Vector2& v2, float t){
+		return lerp(v1, v2, t).normalized();
+	}
+
+	//Linearly interpolates components of Vector3 and normalizes the result
+	inline Vector3 nlerp(const Vector3& v1, const Vector3& v2, float t){
+		return lerp(v1, v2, t).normalized();
+	}
+
+	//Linearly interpolates components of Vector4 and normalizes the result
+	inline Vector4 nlerp(const Vector4& v1, const Vector4& v2, float t){
+		return lerp(v1, v2, t).normalized();
+	}
+
+	//Linearly interpolates components of Vector and normalizes the result
+	template<unsigned int size>
+	inline Vector<size> nlerp(const Vector<size>& v1, const Vector<size>& v2, float t){
+		return lerp(v1, v2, t).normalized();
+	}
+
+
+	//Spherical linear interpolation, q1 and q2 must be normalized. Finds the shortest path. Moves in constant speed. Heavier to compute than nlerp.
+	inline Quaternion slerp(const Quaternion& q1, const Quaternion& q2, float t){
+		t = clamp(t, 0, 1);
+
+		
+
+		float dot = q1.dot(q2);
+
+		Quaternion q22 = q2;
+		
+		//If dot is negative, invert q2 so interpolation will follow the shortest path
+		if (dot < 0.f){
+			q22 = -1 * q2;
+			
+		}
+		
+
+		float angle = acosf(dot);
+
+		float sina = sinf(angle);
+		
+		//Avoid dividing by 0, If they are pararell, just nlerp it
+		if (sina == 0.f){
+			return nlerp(q1, q22, t);
+		}
+		
+		
+		float sinta = sinf(t * angle);
+		float sinomta = sinf((1.f - t) * angle);
+
+		Quaternion qq1 = (sinomta / sina) * q1;
+
+		Quaternion qq2 = (sinta / sina) * q22;
+
+		Quaternion res = qq1 + qq2;
+		res.normalize();
+		return res;
+
+	}
+
+
+	
+	template<unsigned int size>
+	inline float angle(const Vector<size>& v1, const Vector<size>& v2);
+	
+	//Spherical interpolation of two vectors
+	inline Vector4 slerp(const Vector4& v1, const Vector4& v2, float t){
+		float angle = Math::angle(v1, v2);
+		float sina = sinf(angle);
+
+		if (sina == 0){
+			return lerp(v1, v2, t);
+		}
+
+
+		return (sinf((1 - t) * angle) / sina) * v1 + (sinf(t * angle) / sina) * v2;
+	}
+	
+	//Spherical interpolation of two vectors
+	inline Vector3 slerp(const Vector3& v1, const Vector3& v2, float t){
+		float angle = Math::angle(v1, v2);
+		float sina = sinf(angle);
+
+		if (sina == 0){
+			return lerp(v1, v2, t);
+		}
+
+
+		return (sinf((1 - t) * angle) / sina) * v1 + (sinf(t * angle) / sina) * v2;
+	}
+
+	//Spherical interpolation of two vectors
+	inline Vector2 slerp(const Vector2& v1, const Vector2& v2, float t){
+		float angle = Math::angle(v1, v2);
+		float sina = sinf(angle);
+
+		if (sina == 0){
+			return lerp(v1, v2, t);
+		}
+
+
+		return (sinf((1 - t) * angle) / sina) * v1 + (sinf(t * angle) / sina) * v2;
+	}
+
+
+	//Spherical interpolation of two vectors
+	template<unsigned int size>
+	inline Vector<size> slerp(const Vector<size>& v1, const Vector<size>& v2, float t){
+		float angle = Math::angle(v1, v2);
+		float sina = sinf(angle);
+
+		if (sina == 0){
+			return lerp(v1, v2, t);
+		}
+
+		
+		return (sinf((1 - t) * angle) / sina) * v1 + (sinf(t * angle) / sina) * v2;
+	}
+
+
+
+}
+
+
+//Vector stuff:
+
+namespace Math{
+	//Finds an angle(in radians), between two nonzero vectors
+	template<unsigned int size>
+	inline float angle(const Vector<size>& v1, const Vector<size>& v2){
+		if (v1.isZero() || v2.isZero()){
+			Math::mathError("ERROR: Tried to find an angle with zero vector");
+			return 0.f;
+		}
+		float dot = v1.dot(v2);
+		//Account for floating-point errors
+		dot = clamp(dot, -1.f, 1.f);
+		return acosf(dot / v1.lenght() / v2.lenght());
+
+	}
+
+
+
+	//Projects from to the line to. Both vectors need to be zero, but they do not need to be normalized
+	inline Vector2 proj(const Vector2& from, const Vector2& to){
+		if (from.isZero() || to.isZero()){
+			Math::mathError("ERROR: Tried to calculate projection of Vector2 with zero vector(s)");
+			return Vector2();
+		}
+		Vector2 u = to.normalized();
+		return from.dot(u) * u;
+
+	}
+
+	//Projects from to the line to. Both vectors need to be zero, but they do not need to be normalized
+	inline Vector3 proj(const Vector3& from, const Vector3& to){
+		if (from.isZero() || to.isZero()){
+			Math::mathError("ERROR: Tried to calculate projection of Vector3 with zero vector(s)");
+			return Vector3();
+		}
+		Vector3 u = to.normalized();
+		return from.dot(u) * u;
+
+	}
+
+	//Projects from to the line to. Both vectors need to be zero, but they do not need to be normalized
+	inline Vector4 proj(const Vector4& from, const Vector4& to){
+		if (from.isZero() || to.isZero()){
+			Math::mathError("ERROR: Tried to calculate projection of Vector4 with zero vector(s)");
+			return Vector4();
+		}
+		Vector4 u = to.normalized();
+		return from.dot(u) * u;
+
+	}
+
+	//Projects from to the line to. Both vectors need to be zero, but they do not need to be normalized
+	template<unsigned int size>
+	inline Vector<size> proj(const Vector<size>& from, const Vector<size>& to){
+		if (from.isZero() || to.isZero()){
+			Math::mathError("ERROR: Tried to calculate projection of generic Vector with zero vector(s)");
+			return Vector<size>();
+		}
+		
+		Vector<size> u = to.normalized();
+		return from.dot(u) * u;
+	}
+
+	//Makes v2 orthogonal to v1. Returns v2 that is rotated to be orthogonal to v1.
+	inline Vector2 orthogonalize(const Vector2& v1, const Vector2& v2){
+		return v2 - proj(v2, v1);
+	}
+	
+	//Makes v2 orthogonal to v1. Returns v2 that is rotated to be orthogonal to v1.
+	inline Vector3 orthogonalize(const Vector3& v1, const Vector3& v2){
+		return v2 - proj(v2, v1);
+	}
+
+	//Makes v2 orthogonal to v1. Returns v2 that is rotated to be orthogonal to v1.
+	inline Vector4 orthogonalize(const Vector4& v1, const Vector4& v2){
+		return v2 - proj(v2, v1);
+	}
+
+	//Makes v2 orthogonal to v1. Returns v2 that is rotated to be orthogonal to v1.
+	template<unsigned int size>
+	inline Vector<size> orthogonalize(const Vector<size>& v1, const Vector<size>& v2){
+		return v2 - proj(v2, v1);
+	}
+
+
+	//Makes v2 orthogonal to v1. Returns normalized v2 that is rotated to be orthogonal to v1.
+	inline Vector2 orthonormalize(const Vector2& v1, const Vector2& v2){
+		return (v2 - proj(v2, v1)).normalized();
+	}
+
+	//Makes v2 orthogonal to v1. Returns normalized v2 that is rotated to be orthogonal to v1.
+	inline Vector3 orthonormalize(const Vector3& v1, const Vector3& v2){
+		return (v2 - proj(v2, v1)).normalized();
+	}
+
+	//Makes v2 orthogonal to v1. Returns normalized v2 that is rotated to be orthogonal to v1.
+	inline Vector4 orthonormalize(const Vector4& v1, const Vector4& v2){
+		return (v2 - proj(v2, v1)).normalized();
+	}
+
+	//Makes v2 orthogonal to v1. Returns normalized v2 that is rotated to be orthogonal to v1.
+	template<unsigned int size>
+	inline Vector<size> orthonormalize(const Vector<size>& v1, const Vector<size>& v2){
+		return (v2 - proj(v2, v1)).normalized();
+	}
+
+}
+
+
+//Matrices, rotations, that sort of stuff:
+
+namespace Math{
+
+
+	//Returns a Matrix4 representing rotation of angle around axis
+	inline Matrix4 rotationMatrix(const Vector3& axis, float angle){
+		Matrix4 m;
+		m.rotate(axis, angle);
+		return m;
+	}
+
+	//Returns a Matrix4 representing translation
+	inline Matrix4 translationMatrix(const Vector3& translation){
+		Matrix4 m;
+		m.translate(translation);
+		return m;
+	}
+
+	//Returns a Matrix4 representing scaling
+	inline Matrix4 scaleMatrix(const Vector3& scale){
+		Matrix4 m;
+		m.scale(scale);
+		return m;
+	}
+
+	//Returns a matrix representing perspective projection
+	//Parameters: Field of view, aspect ratio(width / height), near clipping plane, far clipping plane
+	inline Matrix4 perspectiveMatrix(float fov, float as, float zNear, float zFar){
+		Matrix4 m;
+
+		
+
+		m[0][0] = 1.f / (as * tan(fov / 2.f)); m[0][1] = 0; m[0][2] = 0; m[0][3] = 0;
+		m[1][0] = 0; m[1][1] = 1.f / tan(fov / 2.f); m[1][2] = 0; m[1][3] = 0;
+		m[2][0] = 0; m[2][1] = 0; m[2][2] = (-zNear - zFar) / (zNear - zFar); m[2][3] = (2.f * zFar * zNear) / (zNear - zFar);
+		m[3][0] = 0; m[3][1] = 0; m[3][2] = 1; m[3][3] = 0;
+	
+		return m;
+	
+	}
+
+
+	//Returns a matrix representing orthographic projection
+	inline Matrix4 orthographicMatrix(float left, float right, float top, float bottom, float n, float f){
+		float width = right - left;
+		float height = top - bottom;
+		float depth = f - n;
+
+		Matrix4 m;
+
+
+
+		m[0][0] =2.f / width; m[0][1] = 0; m[0][2] = 0; m[0][3] = -(right + left) / width;
+		m[1][0] = 0; m[1][1] = 2.f / height; m[1][2] = 0; m[1][3] = -(top + bottom) / height;
+		m[2][0] = 0; m[2][1] = 0; m[2][2] = -2.f / depth; m[2][3] = -(f + n) / depth;
+		m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
+
+
+
+
+		return m;
+
+
+	}
+
+
+	
+
+	//Returns a Quaternion representing a rotation to look at some direction
+	inline Quaternion 
+		lookAt(const Vector3& f, const Vector3& u){
+		
+		float fDotU = f.dot(u);
+		if ((!(fDotU < 0.001f && fDotU > -0.001f)) || f.isZero() || u.isZero()){
+			Math::mathError("ERROR: Called lookAt with f and u being not perpendicular non-zero vectors. Dot product: " + std::to_string(fDotU));
+			return Quaternion();
+		}
+
+		Quaternion look, rot;
+
+		Vector3 forw = f.normalized(), up = u.normalized();
+
+		
+
+		float dot = forw.dot(Vector3::WORLD_FORW);
+
+		//If they are not aligned, rotate them to align.
+		if (dot < 0.9999f){
+
+			look.axisAngle(Vector3::WORLD_FORW.cross(forw), acosf(dot));
+
+
+
+		}
+
+		dot = up.dot(Vector3::WORLD_UP);
+
+		if (dot < 0.9999f){
+
+			rot.axisAngle(Vector3::WORLD_UP.cross(up), acosf(dot));
+
+
+
+		}
+	
+
+
+
+
+		return rot * look;
+	
+	}
+
+
+
+	//Namespace that has functions for working with homogeneous 2D coordinates
+	namespace homogeneous2D{
+
+
+		//Returns Matrix3 that rotates 2D homogeneous vectors by angle
+		inline Matrix3 rotate(float angle){
+			Matrix3 res;
+
+			res.setElement(0, 0, cosf(angle));
+			res.setElement(0, 1, -sinf(angle));
+			res.setElement(1, 0, sinf(angle));
+			res.setElement(1, 1, cosf(angle));
+
+			return res;
+		}
+
+
+		//Returns Matrix3 that translates 2D homogeneous vectors
+		inline Matrix3 translate(Vector2 translation){
+			Matrix3 res;
+			res.setElement(0, 2, translation.x);
+			res.setElement(1, 2, translation.y);
+
+			return res;
+
+		}
+
+		//Returns Matrix3 that scales 2D homogeneous vectors
+		inline Matrix3 scale(Vector2 scaleAmount){
+			Matrix3 res;
+			res.setElement(0, 0, scaleAmount.x);
+			res.setElement(1, 1, scaleAmount.y);
+
+			return res;
+		
+		}
+
+
+
+
+
+
+
+
+	}
+
+
+
+}
