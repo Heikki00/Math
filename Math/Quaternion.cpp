@@ -17,7 +17,7 @@ void Quaternion::axisAngle(const Vector3& axis, float angle)
 
 }
 
-Quaternion Quaternion::operator*(const Vector3& q) const
+Vector3 Quaternion::operator*(const Vector3& q) const
 {
 	Quaternion res;
 
@@ -27,15 +27,10 @@ Quaternion Quaternion::operator*(const Vector3& q) const
 	res.y = w * q.y + z * q.x - x * q.z;
 	res.z = w * q.z + x * q.y - y * q.x;
 
-	return res * this->conjugate();
+	return (res * this->conjugate()).axis();
 }
 
-Vector3 Quaternion::rotateVector(const Vector3& v) const
-{
-	Quaternion q = this->operator*(v);
-	return Vector3(q.x, q.y, q.z);
 
-}
 
 Matrix4 Quaternion::toMatrix() const
 {
@@ -55,32 +50,32 @@ Vector3 Quaternion::axis() const
 
 Vector3 Quaternion::getLeft() const
 {
-	return rotateVector(Vector3::WORLD_LEFT);
+	return this->operator*(Vector3::WORLD_LEFT);
 }
 
 Vector3 Quaternion::getRight() const
 {
-	return rotateVector(Vector3::WORLD_RIGHT);
+	return  this->operator*(Vector3::WORLD_RIGHT);
 }
 
 Vector3 Quaternion::getUp() const
 {
-	return rotateVector(Vector3::WORLD_UP);
+	return  this->operator*(Vector3::WORLD_UP);
 }
 
 Vector3 Quaternion::getDown() const
 {
-	return rotateVector(Vector3::WORLD_DOWN);
+	return  this->operator*(Vector3::WORLD_DOWN);
 }
 
 Vector3 Quaternion::getForw() const
 {
-	return rotateVector(Vector3::WORLD_FORW);
+	return  this->operator*(Vector3::WORLD_FORW);
 }
 
 Vector3 Quaternion::getBack() const
 {
-	return rotateVector(Vector3::WORLD_BACK);
+	return  this->operator*(Vector3::WORLD_BACK);
 }
 
 

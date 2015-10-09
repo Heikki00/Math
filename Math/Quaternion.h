@@ -73,8 +73,8 @@ public:
 
 	}
 
-	//Multiplication operator, that takes in a vector. Returns a Quaternion, from witch can be extracted the rotated vector with axis()
-	Quaternion operator *(const Vector3& v) const;
+	//Multiplication operator, that takes in a vector. Returns a Vector3
+	Vector3 operator *(const Vector3& v) const;
 
 	//Multiplication assignment operator
 	void operator *=(const Quaternion& q) {
@@ -96,8 +96,6 @@ public:
 	//Returns Matrix4 that represents the same rotation as this Quaternion
 	Matrix4 toMatrix() const;
 
-	//Rotates v, and returns the rotated vector. Shortcut to (q * v).axis()
-	Vector3 rotateVector(const Vector3& v) const;
 
 	//Returns the dot product of Quaternion
 	float dot(const Quaternion& q) const { return x * q.x + y * q.y + z * q.z + w * q.w; }
