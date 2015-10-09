@@ -5,15 +5,15 @@
 
 void Quaternion::axisAngle(const Vector3& axis, float angle)
 {
-	
-	
+
+
 	float hAng = angle / 2.f;
 	x = axis.x * sinf(hAng);
 	y = axis.y * sinf(hAng);
 	z = axis.z * sinf(hAng);
 	w = cosf(hAng);
-	
-	
+
+
 
 }
 
@@ -21,7 +21,7 @@ Quaternion Quaternion::operator*(const Vector3& q) const
 {
 	Quaternion res;
 
-	
+
 	res.w = -x * q.x - y * q.y - z * q.z;
 	res.x = w * q.x + y * q.z - z * q.y;
 	res.y = w * q.y + z * q.x - x * q.z;
@@ -44,7 +44,7 @@ Matrix4 Quaternion::toMatrix() const
 		2 * x * z - 2 * y * w, 2 * y * z + 2 * x * w, 1 - 2 * (x * x) - 2 * (y * y), 0,
 		0, 0, 0, 1
 		);
-		
+
 
 }
 

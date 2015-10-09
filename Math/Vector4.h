@@ -1,6 +1,6 @@
 #pragma once
 #include "MathError.h"
-#include "Vector.h"
+
 
 //Forward-declarations
 
@@ -8,113 +8,225 @@ class Vector2;
 class Vector3;
 
 
-//Class that represents 4-dimensional vector. Only variables are
-//references to elements.
-class Vector4 : public Vector<4>{
+//Class that represents 4-dimensional vector. Contains 4 floats.
+class Vector4 {
 public:
+	float x, y, z, w;
 
+	//Inits zero vector
 	Vector4();
-	
-	//Initializes all elements to defValue
+
+	//Inits vector to default value
 	explicit Vector4(float defValue);
+
+	//Constructs vector from 4 values
 	Vector4(float x, float y, float z, float w);
 
-	//Constructs Vector4 from Vector that has 4 elements
-	explicit Vector4(const Vector<4>& v);
 
-	//Copy constructor
-	Vector4(const Vector4& v);
+	//Returns the element in specified position
+	inline float getElement(unsigned int i) const
+	{
+		switch (i)
+		{
+		case 0: return x;
+		case 1: return y;
+		case 2: return z;
+		case 3: return w;
 
-	//Assignment operator, uses operator form Vector
-	inline Vector4& operator =(const Vector4& v){
-		Vector::operator=(v);
-		return *this;
-	}
-
-
-	
-	inline Vector4 operator +(const Vector4& v) const{ return Vector4(x + v.x, y + v.y, z + v.z, w + v.w); }
-
-	inline Vector4 operator -(const Vector4& v) const{ return Vector4(x - v.x, y - v.y, z - v.z, w - v.w); }
-
-	inline friend Vector4 operator *(float scalar, const Vector4& v){ return Vector4(v.x * scalar, v.y * scalar, v.z * scalar, v.w * scalar); }
-	
-	inline Vector4 operator /(float scalar) const{ 
-		if (scalar == 0.f){
-			Math::mathError("ERROR: Tried to divide Vector4 by 0");
-			return Vector4();
+		default:
+			Math::mathError("ERROR: Tried to get element other than 0, 1, 2 or 3 in Vector4\n");
+			return 0.f;
 		}
-		return Vector4(x / scalar, y / scalar, z / scalar, w / scalar); 
 	}
 
-	inline Vector4 operator -() const{ return Vector4(-x, -y, -z, -w); }
+	//Sets the value of the element in specified position
+	inline void setElement(unsigned int i, float f)
+	{
+		switch (i)
+		{
+		case 0: x = f; return;
+		case 1: y = f; return;
+		case 2: z = f; return;
+		case 3: w = f; return;
 
-
-	inline void operator *=(float scalar){ x *= scalar; y *= scalar; z *= scalar; w *= scalar; }
-
-	inline void operator /=(float scalar){ 
-		if (scalar == 0.f){
-			Math::mathError("ERROR: Tried to divide Vector4 by 0");
+		default:
+			Math::mathError("ERROR: Tried to set element other than 0, 1, 2 or 3 in Vector4\n");
 			return;
 		}
-
-		x /= scalar; y /= scalar; z /= scalar; w /= scalar;
-		
-	
 	}
 
-	inline void operator +=(const Vector4& v){ x += v.x; y += v.y; z += v.z; w += v.w; }
 
-	inline void operator -=(const Vector4& v){ x -= v.x; y -= v.y; z -= v.z; w -= v.w; }
+	//Returns the dot product between two vectors
+	inline float dot(const Vector4& v) const
+	{
+		return x*v.x + y*v.y + z*v.z + w*v.w;
+	}
 
-	inline bool operator ==(const Vector4& v) const{ return x == v.x && y == v.y && z == v.z && w == v.w; }
-
-	inline bool operator !=(const Vector4& v) const{ return !this->operator==(v); }
-
-	inline bool isZero() const{ return x == 0 && y == 0 && z == 0 && w == 0; }
-
-	//Optimized method, overrides one from Vector. Calculates lenght of vector with pythagoras theorem
-	inline float lenght() const{
+	//Returns the length of the vector. Has square root in it, use lenght2 when possible
+	inline float lenght() const
+	{
 		return sqrtf(x*x + y*y + z*z + w*w);
 	}
 
-	//Makes lenght of this vector to be 1 (divides it by it's lenght)
-	inline void normalize(){
-		float lenght = this->lenght();
-
-		x /= lenght;
-		y /= lenght;
-		z /= lenght;
-		w /= lenght;
+	//Returns the length squared. Cheaper that lenght()
+	inline float lenght2() const
+	{
+		return x*x + y*y + z*z + w*w;
 	}
 
-	//Returns normalized version of this vector
-	inline Vector4 normalized() const{
-		float lenght = this->lenght();
+	//Returns the normalized version of this vector
+	inline Vector4 normalized() const
+	{
+		float len = lenght();
 
-		return Vector4(x / lenght, y / lenght, z / lenght, w / lenght);
+		return Vector4(x / len, y / len, z / len, w / len);
+	}
+
+	//Normalizes this vector
+	inline void normalize()
+	{
+		float len = lenght();
+
+		x /= len;
+		y /= len;
+		z /= len;
+		w /= len;
+	}
+
+	//Returns true if all elements in this vector are 0
+	inline bool isZero() const
+	{
+		return w == 0 && x == 0 && y == 0 && z == 0;
+	}
+
+
+	//Addition operator
+	inline Vector4 operator +(const Vector4& v) const
+	{
+		Vector4(x + v.x, y + v.y, z + v.z, w + v.w);
+	}
+
+	//Subtraction operator
+	inline Vector4 operator -(const Vector4& v) const
+	{
+		Vector4(x - v.x, y - v.y, z - v.z, w - v.w);
+	}
+
+	//Scaling operator
+	inline Vector4 operator *(float f) const
+	{
+		Vector4(x * f, y * f, z * f, w * f);
+	}
+
+	//Scaling with division
+	inline Vector4 operator /(float f) const
+	{
+		if (f == 0.f) {
+			Math::mathError("ERROR: Tried to divide Vector4 by 0\n");
+			return Vector4();
+		}
+		return Vector4(x / f, y / f, z / f, w / f);
+	}
+
+	//Compound addition
+	inline void operator +=(const Vector4& v)
+	{
+		x += v.x;
+		y += v.y;
+		z += v.z;
+		w += v.w;
+	}
+
+	//Compound subtraction
+	inline void operator -=(const Vector4& v)
+	{
+		x -= v.x;
+		y -= v.y;
+		z -= v.z;
+		w -= v.w;
+	}
+
+	//Compound scaling
+	inline void operator *=(float f)
+	{
+		x *= f;
+		y *= f;
+		z *= f;
+		w *= f;
+	}
+
+	//Compound scaling with division
+	inline void operator /=(float f)
+	{
+		if (f == 0.f) {
+			Math::mathError("ERROR: Tried to divide-assign Vector4 by 0\n");
+			return;
+		}
+
+		x /= f;
+		y /= f;
+		z /= f;
+		w /= f;
+	}
+
+	//Comparison operator
+	inline bool operator ==(const Vector4& v) const
+	{
+		return x == v.x && y == v.z && z == v.z && w == v.w;
+	}
+
+	//Inverted comparison operator
+	inline bool operator !=(const Vector4& v) const
+	{
+		return x != v.x || y != v.y || z != v.z || w != v.w;
+	}
+
+	//Returns a reference to the specified element
+	inline float& operator [](unsigned int i)
+	{
+		switch (i)
+		{
+		case 0: return x;
+		case 1: return y;
+		case 2: return z;
+		case 3: return w;
+
+		default:
+			Math::mathError("ERROR: Tried to get reference to element other than 0, 1, 2 or 3 in Vector4\n");
+			return *((float*)(nullptr));
+		}
+	}
+
+	//Inversion operator
+	inline Vector4 operator -() const {
+		return Vector4(-x, -y, -z, -w);
+	}
+
+	//Returns an array containing all the elements
+	inline float* toArray()
+	{
+		return reinterpret_cast<float*>(this);
+	}
+
+
+
+	//Scaling with scalar first
+	inline friend Vector4 operator *(float f, const Vector4& v) {
+		return v * f;
 
 	}
 
-	//Optimized method, returns dot product of this and v
-	float dot(const Vector4& v) const{
-		return x * v.x + y * v.y + z * v.z + w * v.w;
-
+	//Printing
+	friend std::ostream& operator <<(std::ostream& os, const Vector4& v) {
+		os << std::fixed << "Vector4: (" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")T" << std::endl;
+		return os;
 	}
 
 
 
-	//Reference to elements[0]
-	float& x;
 
-	//Reference to elements[1]
-	float& y;
 
-	//Reference to elements[2]
-	float& z;
 
-	//Reference to elements[3]
-	float& w;
 
 
 

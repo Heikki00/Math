@@ -1,5 +1,4 @@
 #pragma once
-#include "Vector.h"
 #include "MathError.h"
 #include <iostream>
 
@@ -9,133 +8,233 @@ class Vector2;
 class Vector4;
 
 
-//Class that represents 3-dimensional vector. Only variables are
-//references to elements.
+//Class that represents 3-dimensional vector. Contains 3 floats
 //Also includes static const variables for world-up, world-left etc.
-class Vector3 : public Vector<3>{
+class Vector3 {
 public:
+	float x, y, z;
 
+	//Inits zero vector
 	Vector3();
 
-	//Initializes all elements to defValue
+	//Inits vector to default value
 	explicit Vector3(float defValue);
+
+	//Constructs vector from 3 components
 	Vector3(float x, float y, float z);
-	
-	//Initializes elements form v.x, v.y and v.z. Intended use to go back from homogeneous coordinates
+
+	//Constructs vector from x, y and z of Vector4
 	explicit Vector3(const Vector4& v);
 
-	//Constructs Vector3 from Vector that has 3 elements
-	explicit Vector3(const Vector<3>& v);
 
-	//Copy constructor
-	Vector3(const Vector3& v);
+	//Returns the element in specified position
+	inline float getElement(unsigned int i) const {
+		switch (i)
+		{
+		case 0: return x;
+		case 1: return y;
+		case 2: return z;
 
-	//Assignment operator, uses Vectors operator
-	inline Vector3& operator =(const Vector3& v){
-		Vector::operator=(v);
-		return *this;
-	}
-
-
-	inline Vector3 operator +(const Vector3& v) const{ return Vector3(x + v.x, y + v.y, z + v.z); }
-
-	inline Vector3 operator -(const Vector3& v) const{ return Vector3(x - v.x, y - v.y, z - v.z); }
-
-	
-	inline friend Vector3 operator *(float scalar, const Vector3& v){ return Vector3(v.x * scalar, v.y * scalar, v.z * scalar); }
-
-	inline Vector3 operator /(float scalar) const{
-		if (scalar == 0.f){
-			Math::mathError("ERROR: Tried to divide Vector3 by 0");
-			return Vector3();
+		default:
+			Math::mathError("ERROR: Tried to get element other than 0, 1 or 2 in Vector3\n");
+			return 0.f;
 		}
-		return Vector3(x / scalar, y / scalar, z / scalar);
-	}
+	};
 
-	inline Vector3 operator -() const{ return Vector3(-x, -y, -z); }
+	//Sets the value of the element in specified position
+	inline void setElement(unsigned int i, float f) {
+		switch (i)
+		{
+		case 0: x = f; return;
+		case 1: y = f; return;
+		case 2: z = f; return;
 
-
-	inline void operator *=(float scalar){ x *= scalar; y *= scalar; z *= scalar; }
-
-	inline void operator /=(float scalar){
-		if (scalar == 0.f){
-			Math::mathError("ERROR: Tried to divide Vector3 by 0");
+		default:
+			Math::mathError("ERROR: Tried to set element other than 0, 1 or 2 in Vector3\n");
 			return;
 		}
-		x /= scalar; y /= scalar; z /= scalar;
+	};
+
+	//Returns the dot product between two vectors
+	inline float dot(const Vector3& v) const
+	{
+		return x*v.x + y * v.y + z * v.z;
 	}
 
-	inline void operator +=(const Vector3& v){ x += v.x; y += v.y; z += v.z; }
-
-	inline void operator -=(const Vector3& v){ x -= v.x; y -= v.y; z -= v.z; }
-
-	inline bool operator ==(const Vector3& v) const{ return x == v.x && y == v.y && z == v.z; }
-
-	inline bool operator !=(const Vector3& v) const{ return !this->operator==(v); }
-	
-	inline bool isZero() const{ return x == 0 && y == 0 && z == 0; }
-
-	//Returns cross product of this x other (etusormi x keskisormi == peukalo)
-	Vector3 cross(const Vector3& other) const;
-
-	//Optimized method, overrides one from Vector. Calculates lenght of vector with pythagoras theorem
-	inline float lenght() const{
+	//Returns the length of the vector. Has square root in it, use lenght2 when possible
+	inline float lenght() const
+	{
 		return sqrtf(x*x + y*y + z*z);
 	}
 
-	//Makes lenght of this vector to be 1 (divides it by it's lenght)
-	inline void normalize(){
-		float lenght = this->lenght();
-		
-		x /= lenght;
-		y /= lenght;
-		z /= lenght;
+	//Returns the length squared. Cheaper that lenght()
+	inline float lenght2() const
+	{
+		return x*x + y*y + z*z;
+	}
+
+	//Returns the normalized version of this vector
+	inline Vector3 normalized() const
+	{
+		float len = sqrtf(x*x + y*y + z*z);
+
+		return Vector3(x * len, y * len, z * len);
 
 	}
 
-	//Returns normalized version of this vector
-	inline Vector3 normalized() const{
-		float lenght = this->lenght();
-
-		return Vector3(x / lenght, y / lenght, z / lenght);
-
-	}
-
-	//Optimized method, returns dot product of this and v
-	inline float dot(const Vector3& v) const{
-		return x * v.x + y * v.y + z * v.z;
+	//Normalizes this vector
+	inline void normalize()
+	{
+		float len = sqrtf(x*x + y*y + z*z);
+		x /= len;
+		y /= len;
+		z /= len;
 
 	}
 
-	//Converts this to homogeneous coordinates (Vector4(x,y,z,1))
+	//Returns true if all elements in this vector are 0
+	inline bool isZero() const
+	{
+		return x == 0.f && y == 0.f && z == 0.f;
+	}
+
+	//Returns the homogeneous version of this vector(x,y,z,1)
 	Vector4 homogeneous() const;
 
+	//Returns the cross product between 2 vectors
+	inline Vector3 cross(const Vector3& other) const {
+		float xx = (y * other.z) - (z * other.y);
+		float yy = (z * other.x) - (x * other.z);
+		float zz = (x * other.y) - (y * other.x);
 
-	//Reference to elements[0]
-	float& x;
-
-	//Reference to elements[1]
-	float& y;
-
-	//Reference to elements[2]
-	float& z;
-	
-
-	//Vector3(0,1,0)
-	static const Vector3 WORLD_UP;
-	//Vector3(0,-1,0)
-	static const Vector3 WORLD_DOWN;
-	//Vector3(-1,0,0)
-	static const Vector3 WORLD_LEFT;
-	//Vector3(1,0,0)
-	static const Vector3 WORLD_RIGHT;
-	//Vector3(0,0,-1)
-	static const Vector3 WORLD_FORW;
-	//Vector3(0,0,1)
-	static const Vector3 WORLD_BACK;
+		return Vector3(xx, yy, zz);
+	};
 
 
+	//Addition operator
+	inline Vector3 operator +(const Vector3& v) const
+	{
+		return Vector3(x + v.x, y + v.y, z + v.z);
+	}
 
+	//Subtraction operator
+	inline Vector3 operator -(const Vector3& v) const
+	{
+		return Vector3(x - v.x, y - v.y, z - v.z);
+	}
+
+	//Scaling operator
+	inline Vector3 operator *(float f) const
+	{
+		return Vector3(x * f, y * f, z * f);
+	}
+
+	//Scaling with division
+	inline Vector3 operator /(float f) const
+	{
+		if (f == 0.f) {
+			Math::mathError("ERROR: Tried to divide Vector3 by 0\n");
+			return Vector3();
+		}
+		return Vector3(x / f, y / f, z / f);
+	}
+
+	//Compound addition
+	inline void operator +=(const Vector3& v)
+	{
+		x += v.x;
+		y += v.y;
+		z += v.z;
+	}
+
+	//Compound subtraction
+	inline void operator -=(const Vector3& v)
+	{
+		x -= v.x;
+		y -= v.y;
+		z -= v.z;
+	}
+
+	//Compound scaling
+	inline void operator *=(float f)
+	{
+		x *= f;
+		y *= f;
+		z *= f;
+	}
+
+	//Compound scaling with division
+	inline void operator /=(float f)
+	{
+		if (f == 0.f) {
+			Math::mathError("ERROR: Tried to divide-assign Vector3 by 0\n");
+			return;
+		}
+
+		x /= f;
+		y /= f;
+		z /= f;
+	}
+
+	//Comparison operator
+	inline bool operator ==(const Vector3& v) const
+	{
+		return x == v.x && y == v.y && z == v.z;
+	}
+
+	//Inverted comparison operator
+	inline 	bool operator !=(const Vector3& v) const
+	{
+		return x != v.x || y != v.y || z != v.z;
+	}
+
+	//Returns a reference to the specified element
+	inline float& operator [](unsigned int i)
+	{
+		switch (i)
+		{
+		case 0: return x;
+		case 1: return y;
+		case 2: return z;
+
+		default:
+			Math::mathError("ERROR: Tried to get reference to element other than 0, 1 or 2 in Vector3\n");
+			return *((float*)(nullptr));
+		}
+	}
+
+	//Inversion operator
+	inline Vector3 operator -() const {
+		return Vector3(-x, -y, -z);
+	}
+
+	//Returns an array containing all the elements
+	inline float* toArray()
+	{
+		return reinterpret_cast<float*>(this);
+	}
+
+
+
+
+	static const Vector3 Vector3::WORLD_UP;
+	static const Vector3 Vector3::WORLD_DOWN;
+	static const Vector3 Vector3::WORLD_LEFT;
+	static const Vector3 Vector3::WORLD_RIGHT;
+	static const Vector3 Vector3::WORLD_FORW;
+	static const Vector3 Vector3::WORLD_BACK;
+
+	//Scaling with scalar first
+	inline friend Vector3 operator *(float f, const Vector3& v) {
+		return v * f;
+
+	}
+
+	//Printing
+	friend std::ostream& operator <<(std::ostream& os, const Vector3& v) {
+		os << std::fixed << "Vector3: (" << v.x << ", " << v.y << ", " << v.z << ")T" << std::endl;
+		return os;
+	}
 
 };
 

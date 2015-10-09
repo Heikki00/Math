@@ -2,8 +2,8 @@
 #include <string>
 #include <iostream>
 
-namespace Math{
-	
+namespace Math {
+
 	//Prints error message
 	inline void mathError(const std::string& message)
 	{

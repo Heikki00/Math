@@ -24,9 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Vector.cpp">
-      <Filter>Math\Vector</Filter>
-    </ClCompile>
     <ClCompile Include="Vector4.cpp">
       <Filter>Math\Vector</Filter>
     </ClCompile>
@@ -45,9 +42,6 @@
     <ClCompile Include="Vector2.cpp">
       <Filter>Math\Vector</Filter>
     </ClCompile>
-    <ClCompile Include="Matrix.cpp">
-      <Filter>Math\Matrix</Filter>
-    </ClCompile>
     <ClCompile Include="Quaternion.cpp">
       <Filter>Math\Vector</Filter>
     </ClCompile>
@@ -55,13 +49,10 @@
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="DareMath.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Math\Vector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Vector.h">
-      <Filter>Math\Vector</Filter>
-    </ClInclude>
     <ClInclude Include="Vector2.h">
       <Filter>Math\Vector</Filter>
     </ClInclude>
@@ -70,9 +61,6 @@
     </ClInclude>
     <ClInclude Include="Vector4.h">
       <Filter>Math\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix.h">
-      <Filter>Math\Matrix</Filter>
     </ClInclude>
     <ClInclude Include="Matrix4.h">
       <Filter>Math\Matrix</Filter>
@@ -91,6 +79,15 @@
     </ClInclude>
     <ClInclude Include="DareMath.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypedefs.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtility.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorT.h">
+      <Filter>Math\Vector</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

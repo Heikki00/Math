@@ -1,61 +1,142 @@
 #pragma once
-
-#include "Matrix.h"
+#include <iostream>
 
 class Vector2;
 
 //Class that represents 2x2 matrix. All functions expect to be used with 2D vectors
-class Matrix2 : public Matrix < 2, 2 > {
+class Matrix2 {
 public:
 
-	//Constructs an identity matrix
-	Matrix2(){ identity(); }
+	//Inits matrix to identity
+	Matrix2();
 
-	//Constructs an matrix from 4 floats
-	Matrix2(float r0c0, float r0c1,
-		float r1c0, float r1c1
-	
-		){
-
-		setElement(0, 0, r0c0); setElement(0, 1, r0c1);
-		setElement(1, 0, r1c0); setElement(1, 1, r1c1);
-		
-	}
+	//Constructs matrix from 4 elements(row-major)
+	Matrix2(float, float, float, float);
 
 	//Copy constructor
-	Matrix2(const Matrix2& m) : Matrix(m){}
+	Matrix2(const Matrix2& m);
+
+	//Move constructor
+	Matrix2(Matrix2&& m);
 
 	//Assignment operator
-	inline Matrix2& operator =(const Matrix2& v){
-		Matrix::operator=(v);
-		return *this;
-	}
+	Matrix2& operator =(const Matrix2& m);
 
+	//Assignment operator
+	Matrix2& operator =(Matrix2&& m);
 
+	//Destructor
+	~Matrix2();
 
-	//Multiplies itself with Matrix2 of scale v. (Latest will be done first!)
-	void scale(const Vector2& v);
-
-	//Multiplies itself with Matrix2 representing rotation of angle. (Latest will be done first!)
-	void rotate(float angle);
-
-	
-	//Optimized operator for multiplying Vector2s with Matrix2s. Also returns Vector2 in oppose to Matrix<2,1>
-	Vector2 operator *(const Vector2& v) const;
-
-	//Optimized operator for multiplying Matrix2s.Also returns Matrix2 in oppose to Matrix<2, 2>
+	//Matrix multiplication
 	Matrix2 operator *(const Matrix2& m) const;
 
-	//Sets matrix to identity
-	void identity(){
-		memset(elements, 0, sizeof(float) * 4);
-		setElement(0, 0, 1.f); setElement(1, 1, 1.f);
+	//Scaling operator
+	Matrix2 operator *(float f) const;
+
+	//Matrix addition
+	Matrix2 operator +(const Matrix2& m) const;
+
+	//Matrix subtraction
+	Matrix2 operator -(const Matrix2& m) const;
+
+	//Matrix inversion
+	Matrix2 operator -() const;
+
+
+	//Compound matrix multiplication
+	void operator *=(const Matrix2& m);
+
+	//Compound matrix scaling
+	void operator *=(float f);
+
+	//Compound matrix addition
+	void operator +=(const Matrix2& m);
+
+	//Compound matrix subtraction
+	void operator -=(const Matrix2& m);
+
+
+	//Equal operator
+	bool operator ==(const Matrix2& m) const;
+
+	//Non-equal operator
+	bool operator !=(const Matrix2& m) const;
+
+	//Returns a pointer to start of row i
+	float* operator [](unsigned int i) const { return elements + (i * 2); }
+
+
+	//Matrix-vector multiplication
+	Vector2 operator *(const Vector2& v) const;
+
+
+	//Sets this matrix to identity
+	void identity();
+
+	//Returns true if matrix is identity matrix
+	bool isIdentity() const;
+
+	//Returns true if all elements are zero
+	bool isZero() const;
+
+
+	//Returns pointer to array of elements of this matrix
+	float* toArray() const;
+
+	//Returns element at row r and column c
+	float getElement(unsigned int r, unsigned int c) const;
+
+	//Returns element at position pos(row-major order)
+	float getElement(unsigned int pos) const;
+
+	//Sets element at row r and column c to value val
+	void setElement(unsigned int r, unsigned int c, float val);
+
+	//Sets element at position pos to value val(row-major order)
+	void setElement(unsigned int pos, float val);
+
+
+	//Multiplies this matrix by matrix that scales by f
+	void scale(float f);
+
+	//Multiplies this matrix by matrix that rotates by angle
+	void rotate(float angle);
+
+
+	//Transposes this matrix
+	void transpose();
+
+	//Returns transposed version of this matrix
+	Matrix2 transposed() const;
+
+	//Inverts this matrix
+	void invert();
+
+	//Returns inverted version of this matrix
+	Matrix2 inverse() const;
+
+
+
+	friend Matrix2 operator *(float f, const Matrix2& m) { return m * f; }
+
+	friend std::ostream& operator <<(std::ostream& os, const Matrix2& m) {
+		os << std::fixed << "Matrix2: [" << m.elements[0] << ", " << m.elements[1] << "]\n";
+		os << std::fixed << "         [" << m.elements[2] << ", " << m.elements[3] << "]\n";
+
+
+
+		return os;
 	}
 
 
+private:
 
 
+	float* elements;
 
+	static const float zeroArray[4];
+
+	static const float identityMatrix[4];
 };
-
 
