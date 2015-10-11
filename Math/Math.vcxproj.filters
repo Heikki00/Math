@@ -51,6 +51,9 @@
     <ClCompile Include="DareMath.cpp">
       <Filter>Math\Vector</Filter>
     </ClCompile>
+    <ClCompile Include="MathMemoryManager.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vector2.h">
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="VectorT.h">
       <Filter>Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="MathMemoryManager.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

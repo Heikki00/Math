@@ -16,18 +16,6 @@ public:
 	//Copy constructor
 	Matrix2(const Matrix2& m);
 
-	//Move constructor
-	Matrix2(Matrix2&& m);
-
-	//Assignment operator
-	Matrix2& operator =(const Matrix2& m);
-
-	//Assignment operator
-	Matrix2& operator =(Matrix2&& m);
-
-	//Destructor
-	~Matrix2();
-
 	//Matrix multiplication
 	Matrix2 operator *(const Matrix2& m) const;
 
@@ -64,7 +52,7 @@ public:
 	bool operator !=(const Matrix2& m) const;
 
 	//Returns a pointer to start of row i
-	float* operator [](unsigned int i) const { return elements + (i * 2); }
+	float* operator [](unsigned int i) { return &elements[i * 2]; }
 
 
 	//Matrix-vector multiplication
@@ -82,7 +70,7 @@ public:
 
 
 	//Returns pointer to array of elements of this matrix
-	float* toArray() const;
+	float* toArray();
 
 	//Returns element at row r and column c
 	float getElement(unsigned int r, unsigned int c) const;
@@ -133,7 +121,7 @@ public:
 private:
 
 
-	float* elements;
+	float elements[4];
 
 	static const float zeroArray[4];
 

@@ -8,14 +8,14 @@ const float Matrix2::zeroArray[4] = { 0 };
 
 Matrix2::Matrix2()
 {
-	elements = new float[4];
+
 	identity();
 
 
 }
 
 Matrix2::Matrix2(float f0, float f1, float f2, float f3) {
-	elements = new float[4];
+
 	elements[0] = f0;
 	elements[1] = f1;
 	elements[2] = f2;
@@ -25,33 +25,9 @@ Matrix2::Matrix2(float f0, float f1, float f2, float f3) {
 
 Matrix2::Matrix2(const Matrix2& m)
 {
-	elements = new float[4];
 	memcpy(elements, m.elements, sizeof(float) * 4);
 }
 
-Matrix2::Matrix2(Matrix2&& m)
-{
-	elements = m.elements;
-	m.elements = nullptr;
-}
-
-Matrix2& Matrix2::operator=(const Matrix2& m)
-{
-	memcpy(elements, m.elements, sizeof(float) * 4);
-	return *this;
-}
-
-Matrix2& Matrix2::operator=(Matrix2&& m)
-{
-	elements = m.elements;
-	m.elements = nullptr;
-	return *this;
-}
-
-Matrix2::~Matrix2()
-{
-	delete[] elements;
-}
 
 
 
@@ -185,9 +161,9 @@ bool Matrix2::isZero() const
 
 
 
-float* Matrix2::toArray() const
+float* Matrix2::toArray()
 {
-	return elements;
+	return &elements[0];
 }
 
 float Matrix2::getElement(unsigned int r, unsigned int c) const

@@ -1,13 +1,17 @@
 #include "Matrix3.h"
 #include "Vector3.h"
-
+#include "MathMemoryManager.h"
 const float Matrix3::identityMatrix[9] = { 1,0,0,0,1,0,0,0,1 };
 const float Matrix3::zeroArray[9] = { 0 };
 
 
 Matrix3::Matrix3()
 {
+#ifdef MATH_CUSTOM_MEMORY
+	elements = MathMemoryManager::newMat3();
+#else
 	elements = new float[9];
+#endif
 	identity();
 	
 
@@ -16,7 +20,11 @@ Matrix3::Matrix3()
 
 Matrix3::Matrix3(float f0, float f1, float f2, float f3, float f4, float f5, float f6, float f7, float f8)
 {
+#ifdef MATH_CUSTOM_MEMORY
+	elements = MathMemoryManager::newMat3();
+#else
 	elements = new float[9];
+#endif
 
 	elements[0] = f0;
 	elements[1] = f1;
@@ -34,7 +42,11 @@ Matrix3::Matrix3(float f0, float f1, float f2, float f3, float f4, float f5, flo
 Matrix3::Matrix3(const Matrix3& m)
 {
 	
+#ifdef MATH_CUSTOM_MEMORY
+	elements = MathMemoryManager::newMat3();
+#else
 	elements = new float[9];
+#endif
 	memcpy(elements, m.elements, sizeof(float) * 9);
 	
 }
@@ -63,7 +75,11 @@ Matrix3& Matrix3::operator=(Matrix3&& m)
 
 Matrix3::~Matrix3() {
 
+#ifdef MATH_CUSTOM_MEMORY
+	MathMemoryManager::deleteMat3(elements);
+#else
 	delete[] elements;
+#endif
 }
 
 

@@ -88,6 +88,7 @@
       <PreprocessToFile>false</PreprocessToFile>
       <ShowIncludes>false</ShowIncludes>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>C:\Users\Heikki\Documents\Visual Studio 2015\Projects\Math\Math\Dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,6 +105,7 @@
       <PreprocessToFile>false</PreprocessToFile>
       <ShowIncludes>false</ShowIncludes>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>C:\Users\Heikki\Documents\Visual Studio 2015\Projects\Math\Math\Dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,6 +124,7 @@
       <PreprocessToFile>false</PreprocessToFile>
       <ShowIncludes>false</ShowIncludes>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>C:\Users\Heikki\Documents\Visual Studio 2015\Projects\Math\Math\Dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,6 +145,7 @@
       <PreprocessToFile>false</PreprocessToFile>
       <ShowIncludes>false</ShowIncludes>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>C:\Users\Heikki\Documents\Visual Studio 2015\Projects\Math\Math\Dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,6 +157,7 @@
   <ItemGroup>
     <ClCompile Include="DareMath.cpp" />
     <ClCompile Include="MathError.cpp" />
+    <ClCompile Include="MathMemoryManager.cpp" />
     <ClCompile Include="Matrix2.cpp" />
     <ClCompile Include="Matrix3.cpp" />
     <ClCompile Include="Matrix4.cpp" />
@@ -165,6 +170,7 @@
     <ClInclude Include="DareMath.h" />
     <ClInclude Include="DataTypedefs.h" />
     <ClInclude Include="MathError.h" />
+    <ClInclude Include="MathMemoryManager.h" />
     <ClInclude Include="MathUtility.h" />
     <ClInclude Include="Matrix2.h" />
     <ClInclude Include="Matrix3.h" />

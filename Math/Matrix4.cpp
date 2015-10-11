@@ -2,7 +2,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 #include "Quaternion.h"
-
+#include "MathMemoryManager.h"
 
 const float Matrix4::identityMatrix[16] = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
 const float Matrix4::zeroArray[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
@@ -10,14 +10,22 @@ const float Matrix4::zeroArray[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
 Matrix4::Matrix4()
 {
+#ifdef MATH_CUSTOM_MEMORY
+	elements = MathMemoryManager::newMat4();
+#else
 	elements = new float[16];
+#endif
 	identity();
 
 }
 
 Matrix4::Matrix4(float f0, float f1, float f2, float f3, float f4, float f5, float f6, float f7, float f8, float f9, float f10, float f11, float f12, float f13, float f14, float f15)
 {
+#ifdef MATH_CUSTOM_MEMORY
+	elements = MathMemoryManager::newMat4();
+#else
 	elements = new float[16];
+#endif
 
 	elements[0] = f0;
 	elements[1] = f1;
@@ -41,7 +49,11 @@ Matrix4::Matrix4(float f0, float f1, float f2, float f3, float f4, float f5, flo
 Matrix4::Matrix4(const Matrix4& m)
 {
 
+#ifdef MATH_CUSTOM_MEMORY
+	elements = MathMemoryManager::newMat4();
+#else
 	elements = new float[16];
+#endif
 	memcpy(elements, m.elements,sizeof(float) * 16);
 }
 
@@ -53,7 +65,11 @@ Matrix4::Matrix4(Matrix4&& m) {
 
 Matrix4::Matrix4(float* f)
 {
-		elements = new float[16];
+#ifdef MATH_CUSTOM_MEMORY
+	elements = MathMemoryManager::newMat4();
+#else
+	elements = new float[16];
+#endif
 		memcpy(elements, f, sizeof(float) * 16);
 }
 
@@ -82,7 +98,11 @@ Matrix4& Matrix4::operator=(Matrix4&& m) {
 Matrix4::~Matrix4()
 {
 	
+#ifdef MATH_CUSTOM_MEMORY
+	MathMemoryManager::deleteMat4(elements);
+#else
 	delete[] elements;
+#endif
 }
 
 Vector4 Matrix4::operator*(const Vector4& v) const
