@@ -1,5 +1,5 @@
 #pragma once
-
+#define MATH_CUSTOM_MEMORY
 
 
 #include <math.h>
@@ -14,8 +14,22 @@
 #include "Quaternion.h"
 
 #include "MathError.h"
+#include "MathMemoryManager.h"
 
 
+#ifdef MATH_CUSTOM_MEMORY
+
+namespace Math {
+	
+	inline void initMemory(U32 mat4, U32 Mat4Inc, U32 mat3, U32 mat3Inc) {
+		MathMemoryManager::init(mat4, Mat4Inc, mat3, mat3Inc);
+	}
+
+
+}
+
+
+#endif
 
 
 
