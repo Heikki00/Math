@@ -1,6 +1,6 @@
 #pragma once
 #include "MathError.h"
-
+#include "DataTypedefs.h"
 
 //Forward-declarations
 
@@ -8,23 +8,23 @@ class Vector2;
 class Vector3;
 
 
-//Class that represents 4-dimensional vector. Contains 4 floats.
+//Class that represents 4-dimensional vector. Contains 4 F32s.
 class Vector4 {
 public:
-	float x, y, z, w;
+	F32 x, y, z, w;
 
 	//Inits zero vector
 	Vector4();
 
 	//Inits vector to default value
-	explicit Vector4(float defValue);
+	explicit Vector4(F32 defValue);
 
 	//Constructs vector from 4 values
-	Vector4(float x, float y, float z, float w);
+	Vector4(F32 x, F32 y, F32 z, F32 w);
 
 
 	//Returns the element in specified position
-	inline float getElement(unsigned int i) const
+	inline F32 getElement(U32 i) const
 	{
 		switch (i)
 		{
@@ -40,7 +40,7 @@ public:
 	}
 
 	//Sets the value of the element in specified position
-	inline void setElement(unsigned int i, float f)
+	inline void setElement(U32 i, F32 f)
 	{
 		switch (i)
 		{
@@ -57,19 +57,19 @@ public:
 
 
 	//Returns the dot product between two vectors
-	inline float dot(const Vector4& v) const
+	inline F32 dot(const Vector4& v) const
 	{
 		return x*v.x + y*v.y + z*v.z + w*v.w;
 	}
 
 	//Returns the length of the vector. Has square root in it, use lenght2 when possible
-	inline float lenght() const
+	inline F32 lenght() const
 	{
 		return sqrtf(x*x + y*y + z*z + w*w);
 	}
 
 	//Returns the length squared. Cheaper that lenght()
-	inline float lenght2() const
+	inline F32 lenght2() const
 	{
 		return x*x + y*y + z*z + w*w;
 	}
@@ -77,7 +77,7 @@ public:
 	//Returns the normalized version of this vector
 	inline Vector4 normalized() const
 	{
-		float len = lenght();
+		F32 len = lenght();
 
 		return Vector4(x / len, y / len, z / len, w / len);
 	}
@@ -85,7 +85,7 @@ public:
 	//Normalizes this vector
 	inline void normalize()
 	{
-		float len = lenght();
+		F32 len = lenght();
 
 		x /= len;
 		y /= len;
@@ -113,13 +113,13 @@ public:
 	}
 
 	//Scaling operator
-	inline Vector4 operator *(float f) const
+	inline Vector4 operator *(F32 f) const
 	{
 		Vector4(x * f, y * f, z * f, w * f);
 	}
 
 	//Scaling with division
-	inline Vector4 operator /(float f) const
+	inline Vector4 operator /(F32 f) const
 	{
 		if (f == 0.f) {
 			Math::mathError("ERROR: Tried to divide Vector4 by 0\n");
@@ -147,7 +147,7 @@ public:
 	}
 
 	//Compound scaling
-	inline void operator *=(float f)
+	inline void operator *=(F32 f)
 	{
 		x *= f;
 		y *= f;
@@ -156,7 +156,7 @@ public:
 	}
 
 	//Compound scaling with division
-	inline void operator /=(float f)
+	inline void operator /=(F32 f)
 	{
 		if (f == 0.f) {
 			Math::mathError("ERROR: Tried to divide-assign Vector4 by 0\n");
@@ -182,7 +182,7 @@ public:
 	}
 
 	//Returns a reference to the specified element
-	inline float& operator [](unsigned int i)
+	inline F32& operator [](U32 i)
 	{
 		switch (i)
 		{
@@ -193,7 +193,7 @@ public:
 
 		default:
 			Math::mathError("ERROR: Tried to get reference to element other than 0, 1, 2 or 3 in Vector4\n");
-			return *((float*)(nullptr));
+			return *((F32*)(nullptr));
 		}
 	}
 
@@ -203,15 +203,15 @@ public:
 	}
 
 	//Returns an array containing all the elements
-	inline float* toArray()
+	inline F32* toArray()
 	{
-		return reinterpret_cast<float*>(this);
+		return reinterpret_cast<F32*>(this);
 	}
 
 
 
 	//Scaling with scalar first
-	inline friend Vector4 operator *(float f, const Vector4& v) {
+	inline friend Vector4 operator *(F32 f, const Vector4& v) {
 		return v * f;
 
 	}

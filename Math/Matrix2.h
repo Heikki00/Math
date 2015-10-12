@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "DataTypedefs.h"
 
 class Vector2;
 
@@ -11,7 +12,7 @@ public:
 	Matrix2();
 
 	//Constructs matrix from 4 elements(row-major)
-	Matrix2(float, float, float, float);
+	Matrix2(F32, F32, F32, F32);
 
 	//Copy constructor
 	Matrix2(const Matrix2& m);
@@ -20,7 +21,7 @@ public:
 	Matrix2 operator *(const Matrix2& m) const;
 
 	//Scaling operator
-	Matrix2 operator *(float f) const;
+	Matrix2 operator *(F32 f) const;
 
 	//Matrix addition
 	Matrix2 operator +(const Matrix2& m) const;
@@ -36,7 +37,7 @@ public:
 	void operator *=(const Matrix2& m);
 
 	//Compound matrix scaling
-	void operator *=(float f);
+	void operator *=(F32 f);
 
 	//Compound matrix addition
 	void operator +=(const Matrix2& m);
@@ -52,7 +53,7 @@ public:
 	bool operator !=(const Matrix2& m) const;
 
 	//Returns a pointer to start of row i
-	float* operator [](unsigned int i) { return &elements[i * 2]; }
+	F32* operator [](U32 i) { return &elements[i * 2]; }
 
 
 	//Matrix-vector multiplication
@@ -70,26 +71,26 @@ public:
 
 
 	//Returns pointer to array of elements of this matrix
-	float* toArray();
+	F32* toArray();
 
 	//Returns element at row r and column c
-	float getElement(unsigned int r, unsigned int c) const;
+	F32 getElement(U32 r, U32 c) const;
 
 	//Returns element at position pos(row-major order)
-	float getElement(unsigned int pos) const;
+	F32 getElement(U32 pos) const;
 
 	//Sets element at row r and column c to value val
-	void setElement(unsigned int r, unsigned int c, float val);
+	void setElement(U32 r, U32 c, F32 val);
 
 	//Sets element at position pos to value val(row-major order)
-	void setElement(unsigned int pos, float val);
+	void setElement(U32 pos, F32 val);
 
 
 	//Multiplies this matrix by matrix that scales by f
-	void scale(float f);
+	void scale(F32 f);
 
 	//Multiplies this matrix by matrix that rotates by angle
-	void rotate(float angle);
+	void rotate(F32 angle);
 
 
 	//Transposes this matrix
@@ -106,7 +107,7 @@ public:
 
 
 
-	friend Matrix2 operator *(float f, const Matrix2& m) { return m * f; }
+	friend Matrix2 operator *(F32 f, const Matrix2& m) { return m * f; }
 
 	friend std::ostream& operator <<(std::ostream& os, const Matrix2& m) {
 		os << std::fixed << "Matrix2: [" << m.elements[0] << ", " << m.elements[1] << "]\n";
@@ -121,10 +122,10 @@ public:
 private:
 
 
-	float elements[4];
+	F32 elements[4];
 
-	static const float zeroArray[4];
+	static const F32 zeroArray[4];
 
-	static const float identityMatrix[4];
+	static const F32 identityMatrix[4];
 };
 

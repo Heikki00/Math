@@ -155,7 +155,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DareMath.cpp" />
     <ClCompile Include="MathError.cpp" />
     <ClCompile Include="MathMemoryManager.cpp" />
     <ClCompile Include="Matrix2.cpp" />
@@ -167,7 +166,7 @@
     <ClCompile Include="Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DareMath.h" />
+    <ClInclude Include="FestusMath.h" />
     <ClInclude Include="DataTypedefs.h" />
     <ClInclude Include="MathError.h" />
     <ClInclude Include="MathMemoryManager.h" />

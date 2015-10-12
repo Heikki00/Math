@@ -1,23 +1,24 @@
 #pragma once
 
 #include "MathError.h"
+#include "DataTypedefs.h"
 
-template<unsigned int t>
+template<U32 t>
 class VectorT {
 private:
-	float* elements;
+	F32* elements;
 
 public:
 
 	VectorT() {
-		elements = new float[t];
+		elements = new F32[t];
 	}
 
 	~VectorT() {
 		delete[] elements;
 	}
 
-	float getElement(unsigned int i) const
+	F32 getElement(U32 i) const
 	{
 		if (i >= t) {
 			Math::mathError("ERROR: Tried to get element greater than t in VectorT\n");
@@ -26,7 +27,7 @@ public:
 		return elements[i];
 	}
 
-	void setElement(unsigned int i, float f)
+	void setElement(U32 i, F32 f)
 	{
 		if (i >= t) {
 			Math::mathError("ERROR: Tried to set element greater than t in VectorT\n");
@@ -35,36 +36,36 @@ public:
 		elements[i] = f;
 	}
 
-	unsigned int getNumElements() const
+	U32 getNumElements() const
 	{
 		return t;
 	}
 
-	float dot(const VectorT<t>& v) const
+	F32 dot(const VectorT<t>& v) const
 	{
-		float dot = 0.f;
-		for (unsigned int i = 0; i < t; ++i) {
+		F32 dot = 0.f;
+		for (U32 i = 0; i < t; ++i) {
 			dot += getElement(i) * v.getElement(i);
 		}
 
 		return dot;
 	}
 
-	float lenght() const
+	F32 lenght() const
 	{
-		float l2 = 0.f;
+		F32 l2 = 0.f;
 
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			l2 += getElement(i) * getElement(i);
 		}
 		return sqrtf(l2);
 	}
 
-	float lenght2() const
+	F32 lenght2() const
 	{
-		float l2 = 0.f;
+		F32 l2 = 0.f;
 
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			l2 += getElement(i) * getElement(i);
 		}
 		return l2;
@@ -72,9 +73,9 @@ public:
 
 	VectorT<t> normalized() const
 	{
-		const float len = lenght();
+		const F32 len = lenght();
 		VectorT<t> res;
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			res.setElement(i, getElement(i) / len);
 		}
 		return res;
@@ -82,9 +83,9 @@ public:
 
 	void normalize()
 	{
-		const float len = lenght();
+		const F32 len = lenght();
 		
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			setElement(i, getElement(i) / len);
 		}
 
@@ -92,7 +93,7 @@ public:
 
 	bool isZero() const
 	{
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			if (getElement(i) != 0) return false;
 		}
 		return true;
@@ -101,7 +102,7 @@ public:
 	VectorT<t> operator +(const VectorT<t>& v) const
 	{
 		VectorT<t> res;
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			res.setElement(i, getElement(i) + v.getElement());
 		}
 		return res;
@@ -113,22 +114,22 @@ public:
 	{
 
 		VectorT<t> res;
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			res.setElement(i, getElement(i) - v.getElement());
 		}
 		return res;
 	}
 
-	VectorT<t> operator *(float f) const
+	VectorT<t> operator *(F32 f) const
 	{
 		VectorT<t> res;
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			res.setElement(i, getElement(i) * f);
 		}
 		return res;
 	}
 
-	VectorT<t> operator /(float f) const
+	VectorT<t> operator /(F32 f) const
 	{
 
 		if (f == 0.f) {
@@ -137,7 +138,7 @@ public:
 		}
 
 		VectorT<t> res;
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			res.setElement(i, getElement(i) * f);
 		}
 		return res;
@@ -146,7 +147,7 @@ public:
 	VectorT<t> operator -() const
 	{
 		VectorT<t> res;
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			res.setElement(i, -getElement(i));
 		}
 		return res;
@@ -154,26 +155,26 @@ public:
 
 	void operator +=(const VectorT<t>& v)
 	{
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			setElement(i, getElement(i) + v.getElement(i));
 		}
 	}
 
 	void operator -=(const VectorT<t>& v)
 	{
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			setElement(i, getElement(i) - v.getElement(i));
 		}
 	}
 
-	void operator *=(float f)
+	void operator *=(F32 f)
 	{
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			setElement(i, getElement(i) * f);
 		}
 	}
 
-	void operator /=(float f)
+	void operator /=(F32 f)
 	{
 
 		if (f == 0.f) {
@@ -181,22 +182,22 @@ public:
 			return;
 		}
 
-		for (unsigned int i = 0; i < t; ++i) {
+		for (U32 i = 0; i < t; ++i) {
 			setElement(i, getElement(i) / f);
 		}
 	}
 
 	bool operator ==(const VectorT<t>& v) const
 	{
-		return memcmp(elements, v.elements, t * sizeof(float)) == 0;
+		return memcmp(elements, v.elements, t * sizeof(F32)) == 0;
 	}
 
 	bool operator !=(const VectorT<t>& v) const
 	{
-		return return memcmp(elements, v.elements, t * sizeof(float)) != 0;;
+		return return memcmp(elements, v.elements, t * sizeof(F32)) != 0;;
 	}
 
-	float& operator [](unsigned int i)
+	F32& operator [](U32 i)
 	{
 		if (i >= t) {
 			Math::mathError("ERROR: Tried to get reference to element greater than t in VectorT\n");
@@ -206,15 +207,15 @@ public:
 		return elements[i];
 	}
 
-	float* toArray() const
+	F32* toArray() const
 	{
-		float* arr = new float[t];
-		memcpy(arr, elements, t * sizeof(float));
+		F32* arr = new F32[t];
+		memcpy(arr, elements, t * sizeof(F32));
 		return arr;
 	}
 
 
-	friend VectorT<t> operator *(float f, const VectorT<t>& v) {
+	friend VectorT<t> operator *(F32 f, const VectorT<t>& v) {
 		return v * f;
 
 	}

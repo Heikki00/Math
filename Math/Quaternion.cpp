@@ -3,11 +3,11 @@
 #include "Matrix4.h"
 
 
-void Quaternion::axisAngle(const Vector3& axis, float angle)
+void Quaternion::axisAngle(const Vector3& axis, F32 angle)
 {
 
 
-	float hAng = angle / 2.f;
+	F32 hAng = angle / 2.f;
 	x = axis.x * sinf(hAng);
 	y = axis.y * sinf(hAng);
 	z = axis.z * sinf(hAng);

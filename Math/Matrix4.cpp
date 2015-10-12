@@ -4,8 +4,8 @@
 #include "Quaternion.h"
 #include "MathMemoryManager.h"
 
-const float Matrix4::identityMatrix[16] = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
-const float Matrix4::zeroArray[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+const F32 Matrix4::identityMatrix[16] = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
+const F32 Matrix4::zeroArray[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
 
 Matrix4::Matrix4()
@@ -13,18 +13,18 @@ Matrix4::Matrix4()
 #ifdef MATH_CUSTOM_MEMORY
 	elements = MathMemoryManager::newMat4();
 #else
-	elements = new float[16];
+	elements = new F32[16];
 #endif
 	identity();
 
 }
 
-Matrix4::Matrix4(float f0, float f1, float f2, float f3, float f4, float f5, float f6, float f7, float f8, float f9, float f10, float f11, float f12, float f13, float f14, float f15)
+Matrix4::Matrix4(F32 f0, F32 f1, F32 f2, F32 f3, F32 f4, F32 f5, F32 f6, F32 f7, F32 f8, F32 f9, F32 f10, F32 f11, F32 f12, F32 f13, F32 f14, F32 f15)
 {
 #ifdef MATH_CUSTOM_MEMORY
 	elements = MathMemoryManager::newMat4();
 #else
-	elements = new float[16];
+	elements = new F32[16];
 #endif
 
 	elements[0] = f0;
@@ -52,9 +52,9 @@ Matrix4::Matrix4(const Matrix4& m)
 #ifdef MATH_CUSTOM_MEMORY
 	elements = MathMemoryManager::newMat4();
 #else
-	elements = new float[16];
+	elements = new F32[16];
 #endif
-	memcpy(elements, m.elements,sizeof(float) * 16);
+	memcpy(elements, m.elements,sizeof(F32) * 16);
 }
 
 Matrix4::Matrix4(Matrix4&& m) {
@@ -63,17 +63,17 @@ Matrix4::Matrix4(Matrix4&& m) {
 	m.elements = nullptr;
 }
 
-Matrix4::Matrix4(float* f)
+Matrix4::Matrix4(F32* f)
 {
 #ifdef MATH_CUSTOM_MEMORY
 	elements = MathMemoryManager::newMat4();
 #else
-	elements = new float[16];
+	elements = new F32[16];
 #endif
-		memcpy(elements, f, sizeof(float) * 16);
+		memcpy(elements, f, sizeof(F32) * 16);
 }
 
-Matrix4::Matrix4(float** f)
+Matrix4::Matrix4(F32** f)
 {
 	elements = *f;
 	*f = nullptr;
@@ -81,7 +81,7 @@ Matrix4::Matrix4(float** f)
 
 Matrix4& Matrix4::operator=(const Matrix4& m) {
 
-	memcpy(elements, m.elements, sizeof(float) * 16);
+	memcpy(elements, m.elements, sizeof(F32) * 16);
 	return *this;
 	
 }
@@ -120,25 +120,25 @@ Vector4 Matrix4::operator*(const Vector4& v) const
 void Matrix4::identity()
 {
 	
-	memcpy(elements, identityMatrix, sizeof(float) * 16);
+	memcpy(elements, identityMatrix, sizeof(F32) * 16);
 }
 
 bool Matrix4::isIdentity() const
 {
-	return memcmp(elements, identityMatrix, sizeof(float) * 16) == 0;
+	return memcmp(elements, identityMatrix, sizeof(F32) * 16) == 0;
 }
 
 bool Matrix4::isZero() const
 {
-	return memcmp(elements, zeroArray, sizeof(float) * 16) == 0;
+	return memcmp(elements, zeroArray, sizeof(F32) * 16) == 0;
 }
 
-float* Matrix4::toArray() const
+F32* Matrix4::toArray() const
 {
 	return elements;
 }
 
-float Matrix4::getElement(unsigned int r, unsigned int c) const
+F32 Matrix4::getElement(U32 r, U32 c) const
 {
 
 	if (r < 4 && c < 4) {
@@ -150,7 +150,7 @@ float Matrix4::getElement(unsigned int r, unsigned int c) const
 	}
 }
 
-float Matrix4::getElement(unsigned int pos) const
+F32 Matrix4::getElement(U32 pos) const
 {
 	if (pos < 16) return elements[pos];
 	else {
@@ -159,7 +159,7 @@ float Matrix4::getElement(unsigned int pos) const
 	}
 }
 
-void Matrix4::setElement(unsigned int r, unsigned int c, float val)
+void Matrix4::setElement(U32 r, U32 c, F32 val)
 {
 	if (r < 4 && c < 4) {
 		elements[(r * 4) + c] = val;
@@ -169,7 +169,7 @@ void Matrix4::setElement(unsigned int r, unsigned int c, float val)
 	}
 }
 
-void Matrix4::setElement(unsigned int pos, float val)
+void Matrix4::setElement(U32 pos, F32 val)
 {
 	if (pos < 16) elements[pos] = val;
 	else {
@@ -179,7 +179,7 @@ void Matrix4::setElement(unsigned int pos, float val)
 
 
 
-void Matrix4::scale(float f)
+void Matrix4::scale(F32 f)
 {
 	elements[0] *= f;
 	elements[1] *= f;
@@ -203,7 +203,7 @@ void Matrix4::translate(const Vector3& t)
 	elements[15] = t.x * elements[12] + t.y * elements[13] + t.z * elements[14] + elements[15];
 }
 
-void Matrix4::rotate(const Vector3& axis, float angle)
+void Matrix4::rotate(const Vector3& axis, F32 angle)
 {
 
 	Matrix4 m;
@@ -213,12 +213,12 @@ void Matrix4::rotate(const Vector3& axis, float angle)
 		return;
 	}
 
-	float hAng = angle / 2.0f;
+	F32 hAng = angle / 2.0f;
 
-	float x = axis.x * sinf(hAng);
-	float y = axis.y * sinf(hAng);
-	float z = axis.z * sinf(hAng);
-	float w = cosf(hAng);
+	F32 x = axis.x * sinf(hAng);
+	F32 y = axis.y * sinf(hAng);
+	F32 z = axis.z * sinf(hAng);
+	F32 w = cosf(hAng);
 
 
 	m.setElement(0, 0, 1 - 2 * (y * y) - 2 * (z * z)); m.setElement(0, 1, 2 * x * y - 2 * z * w); m.setElement(0, 2, 2 * x * z + 2 * y * w); m.setElement(0, 3, 0);
@@ -231,7 +231,7 @@ void Matrix4::rotate(const Vector3& axis, float angle)
 
 }
 
-void Matrix4::rotateX(float angle)
+void Matrix4::rotateX(F32 angle)
 {
 	this->operator*=(Matrix4(1, 0, 0, 0,
 		0, cosf(angle), -sinf(angle), 0,
@@ -240,7 +240,7 @@ void Matrix4::rotateX(float angle)
 		));
 }
 
-void Matrix4::rotateY(float angle)
+void Matrix4::rotateY(F32 angle)
 {
 	this->operator*=(Matrix4(cosf(angle), 0, sinf(angle), 0,
 		0, 1, 0, 0,
@@ -249,7 +249,7 @@ void Matrix4::rotateY(float angle)
 		));
 }
 
-void Matrix4::rotateZ(float angle)
+void Matrix4::rotateZ(F32 angle)
 {
 	this->operator*=(Matrix4(cosf(angle), -sinf(angle), 0, 0,
 		sinf(angle), cosf(angle), 0, 0,
@@ -262,12 +262,12 @@ void Matrix4::rotateZ(float angle)
 
 bool Matrix4::operator!=(const Matrix4& m) const
 {
-	return memcmp(elements, m.elements, sizeof(float) * 16) != 0;
+	return memcmp(elements, m.elements, sizeof(F32) * 16) != 0;
 }
 
 bool Matrix4::operator==(const Matrix4& m) const
 {
-	return memcmp(elements, m.elements, sizeof(float) * 16) == 0;
+	return memcmp(elements, m.elements, sizeof(F32) * 16) == 0;
 }
 
 void Matrix4::operator-=(const Matrix4& m)
@@ -310,7 +310,7 @@ void Matrix4::operator+=(const Matrix4& m)
 	elements[15] += m.elements[15];
 }
 
-void Matrix4::operator*=(float f)
+void Matrix4::operator*=(F32 f)
 {
 	elements[0] *= f;
 	elements[1] *= f;
@@ -357,7 +357,7 @@ Matrix4 Matrix4::operator+(const Matrix4& m) const
 	return res;
 }
 
-Matrix4 Matrix4::operator*(float f) const
+Matrix4 Matrix4::operator*(F32 f) const
 {
 	Matrix4 res = *this;
 	res *= f;
@@ -406,8 +406,8 @@ void Matrix4::invert()
 
 Matrix4 Matrix4::inverse() const
 {
-	float* inv = new float[16];
-	float det;
+	F32* inv = new F32[16];
+	F32 det;
 
 
 	inv[0] = elements[5] * elements[10] * elements[15] -

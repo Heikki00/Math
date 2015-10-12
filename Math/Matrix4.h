@@ -1,5 +1,6 @@
 #pragma once
 #include "MathError.h"
+#include "DataTypedefs.h"
 
 //Forward-declarations
 
@@ -15,13 +16,13 @@ public:
 	Matrix4();
 
 	//Constructs matrix from 16 elements(row-major)
-	Matrix4(float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float);
+	Matrix4(F32, F32, F32, F32, F32, F32, F32, F32, F32, F32, F32, F32, F32, F32, F32, F32);
 
-	//Constructs matrix from float array. Copies the array
-	Matrix4(float* f);
+	//Constructs matrix from F32 array. Copies the array
+	Matrix4(F32* f);
 
-	//Constructs matrix from float array. Takes ownership of the pointer, assings it to null
-	Matrix4(float** f);
+	//Constructs matrix from F32 array. Takes ownership of the pointer, assings it to null
+	Matrix4(F32** f);
 
 	//Copy constructor
 	Matrix4(const Matrix4& m);
@@ -43,7 +44,7 @@ public:
 	Matrix4 operator *(const Matrix4& m) const;
 
 	//Scaling operator
-	Matrix4 operator *(float f) const;
+	Matrix4 operator *(F32 f) const;
 
 	//Matrix addition
 	Matrix4 operator +(const Matrix4& m) const;
@@ -59,7 +60,7 @@ public:
 	void operator *=(const Matrix4& m);
 
 	//Compound matrix scaling
-	void operator *=(float f);
+	void operator *=(F32 f);
 
 	//Compound matrix addition
 	void operator +=(const Matrix4& m);
@@ -75,7 +76,7 @@ public:
 	bool operator !=(const Matrix4& m) const;
 
 	//Returns a pointer to start of row i
-	float* operator [](unsigned int i) const { return elements + (i * 4); }
+	F32* operator [](U32 i) const { return elements + (i * 4); }
 
 	//Matrix-vector multiplication
 	Vector4 operator *(const Vector4& v) const;
@@ -92,40 +93,40 @@ public:
 
 
 	//Returns pointer to array of elements of this matrix
-	float* toArray() const;
+	F32* toArray() const;
 
 	//Returns element at row r and column c
-	float getElement(unsigned int r, unsigned int c) const;
+	F32 getElement(U32 r, U32 c) const;
 
 	//Returns element at position pos(row-major order)
-	float getElement(unsigned int pos) const;
+	F32 getElement(U32 pos) const;
 
 	//Sets element at row r and column c to value val
-	void setElement(unsigned int r, unsigned int c, float val);
+	void setElement(U32 r, U32 c, F32 val);
 
 	//Sets element at position pos to value val(row-major order)
-	void setElement(unsigned int pos, float val);
+	void setElement(U32 pos, F32 val);
 
 
 	//Multiplies this matrix by matrix that scales by f
 	//EXPERIMENTAL OPTIMIZATION, TESTING NEEDED
-	void scale(float f);
+	void scale(F32 f);
 
 	//Multiplies this matrix by matrix that translates by t
 	//EXPERIMENTAL OPTIMIZATION, TESTING NEEDED
 	void translate(const Vector3& t);
 
 	//Multiplies this matrix by matrix that rotates by angle around axis
-	void rotate(const Vector3& axis, float angle);
+	void rotate(const Vector3& axis, F32 angle);
 
 	//Multiplies this matrix by matrix that rotates by angle around x-axis(note: x-axis != Vector3::WORLD_RIGHT)
-	void rotateX(float angle);
+	void rotateX(F32 angle);
 
 	//Multiplies this matrix by matrix that rotates by angle around y-axis(note: y-axis != Vector3::WORLD_UP)
-	void rotateY(float angle);
+	void rotateY(F32 angle);
 
 	//Multiplies this matrix by matrix that rotates by angle around z-axis(note: z-axis != Vector3::WORLD_FORW)
-	void rotateZ(float angle);
+	void rotateZ(F32 angle);
 
 	//Inverts this matrix
 	void invert();
@@ -142,7 +143,7 @@ public:
 
 
 
-	friend Matrix4 operator *(float f, const Matrix4& m) { return m * f; }
+	friend Matrix4 operator *(F32 f, const Matrix4& m) { return m * f; }
 
 	friend std::ostream& operator <<(std::ostream& os, const Matrix4& m) {
 		os << std::fixed << "Matrix4: [" << m.elements[0] << ", " << m.elements[1] << ", " << m.elements[2] << ", " << m.elements[3] << "]\n";
@@ -158,11 +159,11 @@ public:
 
 
 private:
-	float* elements;
+	F32* elements;
 
-	static const float zeroArray[16];
+	static const F32 zeroArray[16];
 
-	static const float identityMatrix[16];
+	static const F32 identityMatrix[16];
 
 
 

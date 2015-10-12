@@ -13,6 +13,7 @@
 #include "Matrix2.h"
 #include "Quaternion.h"
 
+#include "DataTypedefs.h"
 #include "MathError.h"
 #include "MathMemoryManager.h"
 
@@ -37,42 +38,42 @@ namespace Math {
 
 namespace Math {
 
-	//Linearly interpolates two numbers. t gets clamped, so it can be any float (well... contain your NaNs, still)
-	inline float lerp(float v0, float v1, float t) {
+	//Linearly interpolates two numbers. t gets clamped, so it can be any F32 (well... contain your NaNs, still)
+	inline F32 lerp(F32 v0, F32 v1, F32 t) {
 		t = clamp(t, 0.f, 1.f);
 		return (1 - t) * v0 + t * v1;
 	}
 
 	//Linearly interpolates components of Vector2
-	inline Vector2 lerp(const Vector2& v1, const Vector2& v2, float t) {
+	inline Vector2 lerp(const Vector2& v1, const Vector2& v2, F32 t) {
 		return Vector2(lerp(v1.x, v2.x, t), lerp(v1.y, v2.y, t));
 	}
 
 	//Linearly interpolates components of Vector3
-	inline Vector3 lerp(const Vector3& v1, const Vector3& v2, float t) {
+	inline Vector3 lerp(const Vector3& v1, const Vector3& v2, F32 t) {
 		return Vector3(lerp(v1.x, v2.x, t), lerp(v1.y, v2.y, t), lerp(v1.z, v2.z, t));
 	}
 
 	//Linearly interpolates components of Vector4
-	inline Vector4 lerp(const Vector4& v1, const Vector4& v2, float t) {
+	inline Vector4 lerp(const Vector4& v1, const Vector4& v2, F32 t) {
 		return Vector4(lerp(v1.x, v2.x, t), lerp(v1.y, v2.y, t), lerp(v1.z, v2.z, t), lerp(v1.w, v2.w, t));
 	}
 
 	//Linearly interpolates components of Vector
-	template<unsigned int s>
-	inline VectorT<s> lerp(const VectorT<s>& v1, const VectorT<s>& v2, float t) {
+	template<U32 s>
+	inline VectorT<s> lerp(const VectorT<s>& v1, const VectorT<s>& v2, F32 t) {
 		VectorT<s> res;
 
-		for (unsigned int i = 0; i < size; ++i)
+		for (U32 i = 0; i < size; ++i)
 			res.setElement(i, lerp(v1[i], v2[i], t));
 
 		return res;
 	}
 
 	//Interpolates two Quaternions. There isn't a lot of speed variation, and lot cheaper than slerp. Finds the shortest path.
-	inline Quaternion nlerp(const Quaternion& q1, const Quaternion& q2, float t) {
-		float dot = q1.dot(q2);
-		//Account for floating-point errors
+	inline Quaternion nlerp(const Quaternion& q1, const Quaternion& q2, F32 t) {
+		F32 dot = q1.dot(q2);
+		//Account for F32ing-point errors
 		dot = clamp(dot, -1.f, 1.f);
 
 		Quaternion q22 = q2;
@@ -87,34 +88,34 @@ namespace Math {
 	}
 
 	//Linearly interpolates components of Vector2 and normalizes the result
-	inline Vector2 nlerp(const Vector2& v1, const Vector2& v2, float t) {
+	inline Vector2 nlerp(const Vector2& v1, const Vector2& v2, F32 t) {
 		return lerp(v1, v2, t).normalized();
 	}
 
 	//Linearly interpolates components of Vector3 and normalizes the result
-	inline Vector3 nlerp(const Vector3& v1, const Vector3& v2, float t) {
+	inline Vector3 nlerp(const Vector3& v1, const Vector3& v2, F32 t) {
 		return lerp(v1, v2, t).normalized();
 	}
 
 	//Linearly interpolates components of Vector4 and normalizes the result
-	inline Vector4 nlerp(const Vector4& v1, const Vector4& v2, float t) {
+	inline Vector4 nlerp(const Vector4& v1, const Vector4& v2, F32 t) {
 		return lerp(v1, v2, t).normalized();
 	}
 
 	//Linearly interpolates components of Vector and normalizes the result
-	template<unsigned int size>
-	inline VectorT<size> nlerp(const VectorT<size>& v1, const VectorT<size>& v2, float t) {
+	template<U32 size>
+	inline VectorT<size> nlerp(const VectorT<size>& v1, const VectorT<size>& v2, F32 t) {
 		return lerp(v1, v2, t).normalized();
 	}
 
 
 	//Spherical linear interpolation, q1 and q2 must be normalized. Finds the shortest path. Moves in constant speed. Heavier to compute than nlerp.
-	inline Quaternion slerp(const Quaternion& q1, const Quaternion& q2, float t) {
+	inline Quaternion slerp(const Quaternion& q1, const Quaternion& q2, F32 t) {
 		t = clamp(t, 0, 1);
 
 
 
-		float dot = q1.dot(q2);
+		F32 dot = q1.dot(q2);
 
 		Quaternion q22 = q2;
 
@@ -125,9 +126,9 @@ namespace Math {
 		}
 
 
-		float angle = acosf(dot);
+		F32 angle = acosf(dot);
 
-		float sina = sinf(angle);
+		F32 sina = sinf(angle);
 
 		//Avoid dividing by 0, If they are pararell, just nlerp it
 		if (sina == 0.f) {
@@ -135,8 +136,8 @@ namespace Math {
 		}
 
 
-		float sinta = sinf(t * angle);
-		float sinomta = sinf((1.f - t) * angle);
+		F32 sinta = sinf(t * angle);
+		F32 sinomta = sinf((1.f - t) * angle);
 
 		Quaternion qq1 = (sinomta / sina) * q1;
 
@@ -150,17 +151,17 @@ namespace Math {
 
 
 
-	template<unsigned int size>
-	inline float angle(const VectorT<size>& v1, const VectorT<size>& v2);
+	template<U32 size>
+	inline F32 angle(const VectorT<size>& v1, const VectorT<size>& v2);
 	
-	inline float angle(const Vector2& v1, const Vector2& v2);
-	inline float angle(const Vector3& v1, const Vector3& v2);
-	inline float angle(const Vector4& v1, const Vector4& v2);
+	inline F32 angle(const Vector2& v1, const Vector2& v2);
+	inline F32 angle(const Vector3& v1, const Vector3& v2);
+	inline F32 angle(const Vector4& v1, const Vector4& v2);
 
 	//Spherical interpolation of two vectors
-	inline Vector4 slerp(const Vector4& v1, const Vector4& v2, float t) {
-		float angle = Math::angle(v1, v2);
-		float sina = sinf(angle);
+	inline Vector4 slerp(const Vector4& v1, const Vector4& v2, F32 t) {
+		F32 angle = Math::angle(v1, v2);
+		F32 sina = sinf(angle);
 
 		if (sina == 0) {
 			return lerp(v1, v2, t);
@@ -171,9 +172,9 @@ namespace Math {
 	}
 
 	//Spherical interpolation of two vectors
-	inline Vector3 slerp(const Vector3& v1, const Vector3& v2, float t) {
-		float angle = Math::angle(v1, v2);
-		float sina = sinf(angle);
+	inline Vector3 slerp(const Vector3& v1, const Vector3& v2, F32 t) {
+		F32 angle = Math::angle(v1, v2);
+		F32 sina = sinf(angle);
 
 		if (sina == 0) {
 			return lerp(v1, v2, t);
@@ -184,9 +185,9 @@ namespace Math {
 	}
 
 	//Spherical interpolation of two vectors
-	inline Vector2 slerp(const Vector2& v1, const Vector2& v2, float t) {
-		float angle = Math::angle(v1, v2);
-		float sina = sinf(angle);
+	inline Vector2 slerp(const Vector2& v1, const Vector2& v2, F32 t) {
+		F32 angle = Math::angle(v1, v2);
+		F32 sina = sinf(angle);
 
 		if (sina == 0) {
 			return lerp(v1, v2, t);
@@ -198,10 +199,10 @@ namespace Math {
 
 
 	//Spherical interpolation of two vectors
-	template<unsigned int size>
-	inline VectorT<size> slerp(const VectorT<size>& v1, const VectorT<size>& v2, float t) {
-		float angle = Math::angle(v1, v2);
-		float sina = sinf(angle);
+	template<U32 size>
+	inline VectorT<size> slerp(const VectorT<size>& v1, const VectorT<size>& v2, F32 t) {
+		F32 angle = Math::angle(v1, v2);
+		F32 sina = sinf(angle);
 
 		if (sina == 0) {
 			return lerp(v1, v2, t);
@@ -220,48 +221,48 @@ namespace Math {
 
 namespace Math {
 	//Finds an angle(in radians), between two nonzero vectors
-	template<unsigned int size>
-	inline float angle(const VectorT<size>& v1, const VectorT<size>& v2) {
+	template<U32 size>
+	inline F32 angle(const VectorT<size>& v1, const VectorT<size>& v2) {
 		if (v1.isZero() || v2.isZero()) {
 			Math::mathError("ERROR: Tried to find an angle with zero vector");
 			return 0.f;
 		}
-		float dot = v1.dot(v2);
-		//Account for floating-point errors
+		F32 dot = v1.dot(v2);
+		//Account for F32ing-point errors
 		dot = clamp(dot, -1.f, 1.f);
 		return acosf(dot / v1.lenght() / v2.lenght());
 
 	}
 
-	inline float angle(const Vector2& v1, const Vector2& v2) {
+	inline F32 angle(const Vector2& v1, const Vector2& v2) {
 		if (v1.isZero() || v2.isZero()) {
 			Math::mathError("ERROR: Tried to find an angle with zero vector");
 			return 0.f;
 		}
-		float dot = v1.dot(v2);
-		//Account for floating-point errors
+		F32 dot = v1.dot(v2);
+		//Account for F32ing-point errors
 		dot = clamp(dot, -1.f, 1.f);
 		return acosf(dot / v1.lenght() / v2.lenght());
 	}
 
-	inline float angle(const Vector3& v1, const Vector3& v2) {
+	inline F32 angle(const Vector3& v1, const Vector3& v2) {
 		if (v1.isZero() || v2.isZero()) {
 			Math::mathError("ERROR: Tried to find an angle with zero vector");
 			return 0.f;
 		}
-		float dot = v1.dot(v2);
-		//Account for floating-point errors
+		F32 dot = v1.dot(v2);
+		//Account for F32ing-point errors
 		dot = clamp(dot, -1.f, 1.f);
 		return acosf(dot / v1.lenght() / v2.lenght());
 	}
 
-	inline float angle(const Vector4& v1, const Vector4& v2) {
+	inline F32 angle(const Vector4& v1, const Vector4& v2) {
 		if (v1.isZero() || v2.isZero()) {
 			Math::mathError("ERROR: Tried to find an angle with zero vector");
 			return 0.f;
 		}
-		float dot = v1.dot(v2);
-		//Account for floating-point errors
+		F32 dot = v1.dot(v2);
+		//Account for F32ing-point errors
 		dot = clamp(dot, -1.f, 1.f);
 		return acosf(dot / v1.lenght() / v2.lenght());
 	}
@@ -302,7 +303,7 @@ namespace Math {
 	}
 
 	//Projects from to the line to. Both vectors need to be zero, but they do not need to be normalized
-	template<unsigned int size>
+	template<U32 size>
 	inline VectorT<size> proj(const VectorT<size>& from, const VectorT<size>& to) {
 		if (from.isZero() || to.isZero()) {
 			Math::mathError("ERROR: Tried to calculate projection of generic Vector with zero vector(s)");
@@ -329,7 +330,7 @@ namespace Math {
 	}
 
 	//Makes v2 orthogonal to v1. Returns v2 that is rotated to be orthogonal to v1.
-	template<unsigned int size>
+	template<U32 size>
 	inline VectorT<size> orthogonalize(const VectorT<size>& v1, const VectorT<size>& v2) {
 		return v2 - proj(v2, v1);
 	}
@@ -351,7 +352,7 @@ namespace Math {
 	}
 
 	//Makes v2 orthogonal to v1. Returns normalized v2 that is rotated to be orthogonal to v1.
-	template<unsigned int size>
+	template<U32 size>
 	inline VectorT<size> orthonormalize(const VectorT<size>& v1, const VectorT<size>& v2) {
 		return (v2 - proj(v2, v1)).normalized();
 	}
@@ -365,7 +366,7 @@ namespace Math {
 
 
 	//Returns a Matrix4 representing rotation of angle around axis
-	inline Matrix4 rotationMatrix(const Vector3& axis, float angle) {
+	inline Matrix4 rotationMatrix(const Vector3& axis, F32 angle) {
 		Matrix4 m;
 		m.rotate(axis, angle);
 		return m;
@@ -379,7 +380,7 @@ namespace Math {
 	}
 
 	//Returns a Matrix4 representing scaling
-	inline Matrix4 scaleMatrix(float f) {
+	inline Matrix4 scaleMatrix(F32 f) {
 		Matrix4 m;
 		m.scale(f);
 		return m;
@@ -387,7 +388,7 @@ namespace Math {
 
 	//Returns a matrix representing perspective projection
 	//Parameters: Field of view, aspect ratio(width / height), near clipping plane, far clipping plane
-	inline Matrix4 perspectiveMatrix(float fov, float as, float zNear, float zFar) {
+	inline Matrix4 perspectiveMatrix(F32 fov, F32 as, F32 zNear, F32 zFar) {
 		Matrix4 m;
 
 
@@ -403,10 +404,10 @@ namespace Math {
 
 
 	//Returns a matrix representing orthographic projection
-	inline Matrix4 orthographicMatrix(float left, float right, float top, float bottom, float n, float f) {
-		float width = right - left;
-		float height = top - bottom;
-		float depth = f - n;
+	inline Matrix4 orthographicMatrix(F32 left, F32 right, F32 top, F32 bottom, F32 n, F32 f) {
+		F32 width = right - left;
+		F32 height = top - bottom;
+		F32 depth = f - n;
 
 		Matrix4 m;
 
@@ -432,7 +433,7 @@ namespace Math {
 	inline Quaternion
 		lookAt(const Vector3& f, const Vector3& u) {
 
-		float fDotU = f.dot(u);
+		F32 fDotU = f.dot(u);
 		if ((!(fDotU < 0.001f && fDotU > -0.001f)) || f.isZero() || u.isZero()) {
 			Math::mathError("ERROR: Called lookAt with f and u being not perpendicular non-zero vectors. Dot product: " + std::to_string(fDotU));
 			return Quaternion();
@@ -444,7 +445,7 @@ namespace Math {
 
 
 
-		float dot = forw.dot(Vector3::WORLD_FORW);
+		F32 dot = forw.dot(Vector3::WORLD_FORW);
 
 		//If they are not aligned, rotate them to align.
 		if (dot < 0.9999f) {
@@ -480,7 +481,7 @@ namespace Math {
 
 
 		//Returns Matrix3 that rotates 2D homogeneous vectors by angle
-		inline Matrix3 rotate(float angle) {
+		inline Matrix3 rotate(F32 angle) {
 			Matrix3 res;
 
 			res.setElement(0, 0, cosf(angle));
@@ -503,7 +504,7 @@ namespace Math {
 		}
 
 		//Returns Matrix3 that scales 2D homogeneous vectors
-		inline Matrix3 scale(float f) {
+		inline Matrix3 scale(F32 f) {
 			Matrix3 res;
 			res.setElement(0, 0, f);
 			res.setElement(1, 1, f);

@@ -2,8 +2,8 @@
 #include "Vector2.h"
 
 
-const float Matrix2::identityMatrix[4] = { 1,0,1,0 };
-const float Matrix2::zeroArray[4] = { 0 };
+const F32 Matrix2::identityMatrix[4] = { 1,0,1,0 };
+const F32 Matrix2::zeroArray[4] = { 0 };
 
 
 Matrix2::Matrix2()
@@ -14,7 +14,7 @@ Matrix2::Matrix2()
 
 }
 
-Matrix2::Matrix2(float f0, float f1, float f2, float f3) {
+Matrix2::Matrix2(F32 f0, F32 f1, F32 f2, F32 f3) {
 
 	elements[0] = f0;
 	elements[1] = f1;
@@ -25,7 +25,7 @@ Matrix2::Matrix2(float f0, float f1, float f2, float f3) {
 
 Matrix2::Matrix2(const Matrix2& m)
 {
-	memcpy(elements, m.elements, sizeof(float) * 4);
+	memcpy(elements, m.elements, sizeof(F32) * 4);
 }
 
 
@@ -48,7 +48,7 @@ Matrix2 Matrix2::operator*(const Matrix2& m) const
 	return res;
 }
 
-Matrix2 Matrix2::operator*(float f) const
+Matrix2 Matrix2::operator*(F32 f) const
 {
 	Matrix2 ret = *this;
 
@@ -91,7 +91,7 @@ void Matrix2::operator*=(const Matrix2& m)
 	*this = *this * m;
 }
 
-void Matrix2::operator*=(float f)
+void Matrix2::operator*=(F32 f)
 {
 	elements[0] *= f;
 	elements[1] *= f;
@@ -119,12 +119,12 @@ void Matrix2::operator-=(const Matrix2& m)
 
 bool Matrix2::operator==(const Matrix2& m) const
 {
-	return memcmp(elements, m.elements, sizeof(float) * 4) == 0;
+	return memcmp(elements, m.elements, sizeof(F32) * 4) == 0;
 }
 
 bool Matrix2::operator!=(const Matrix2& m) const
 {
-	return memcmp(elements, m.elements, sizeof(float) * 4) != 0;
+	return memcmp(elements, m.elements, sizeof(F32) * 4) != 0;
 }
 
 Vector2 Matrix2::operator*(const Vector2& v) const
@@ -145,28 +145,28 @@ Vector2 Matrix2::operator*(const Vector2& v) const
 
 void Matrix2::identity()
 {
-	memcpy(elements, identityMatrix, sizeof(float) * 4);
+	memcpy(elements, identityMatrix, sizeof(F32) * 4);
 
 }
 
 bool Matrix2::isIdentity() const
 {
-	return memcmp(elements, identityMatrix, sizeof(float) * 4) == 0;
+	return memcmp(elements, identityMatrix, sizeof(F32) * 4) == 0;
 }
 
 bool Matrix2::isZero() const
 {
-	return memcmp(elements, zeroArray, sizeof(float) * 4) == 0;
+	return memcmp(elements, zeroArray, sizeof(F32) * 4) == 0;
 }
 
 
 
-float* Matrix2::toArray()
+F32* Matrix2::toArray()
 {
 	return &elements[0];
 }
 
-float Matrix2::getElement(unsigned int r, unsigned int c) const
+F32 Matrix2::getElement(U32 r, U32 c) const
 {
 	if (r < 2 && c < 2) {
 		return elements[(r * 2) + c];
@@ -177,7 +177,7 @@ float Matrix2::getElement(unsigned int r, unsigned int c) const
 	}
 }
 
-float Matrix2::getElement(unsigned int pos) const
+F32 Matrix2::getElement(U32 pos) const
 {
 	if (pos < 4) return elements[pos];
 	else {
@@ -187,7 +187,7 @@ float Matrix2::getElement(unsigned int pos) const
 }
 
 
-void Matrix2::setElement(unsigned int r, unsigned int c, float val)
+void Matrix2::setElement(U32 r, U32 c, F32 val)
 {
 	if (r < 2 && c < 2) {
 		elements[(r * 2) + c] = val;
@@ -198,7 +198,7 @@ void Matrix2::setElement(unsigned int r, unsigned int c, float val)
 
 }
 
-void Matrix2::setElement(unsigned int pos, float val)
+void Matrix2::setElement(U32 pos, F32 val)
 {
 
 	if (pos < 4) elements[pos] = val;
@@ -207,7 +207,7 @@ void Matrix2::setElement(unsigned int pos, float val)
 	}
 }
 
-void Matrix2::scale(float f)
+void Matrix2::scale(F32 f)
 {
 	elements[0] *= f;
 	elements[1] *= f;
@@ -215,7 +215,7 @@ void Matrix2::scale(float f)
 	elements[3] *= f;
 }
 
-void Matrix2::rotate(float angle)
+void Matrix2::rotate(F32 angle)
 {
 	Matrix2 m(cosf(angle), -sinf(angle),
 		sinf(angle), cosf(angle));

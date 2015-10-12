@@ -1,6 +1,7 @@
 #pragma once
 #include "MathError.h"
 #include <iostream>
+#include "DataTypedefs.h"
 
 //Forward-declarations
 
@@ -8,27 +9,27 @@ class Vector2;
 class Vector4;
 
 
-//Class that represents 3-dimensional vector. Contains 3 floats
+//Class that represents 3-dimensional vector. Contains 3 F32s
 //Also includes static const variables for world-up, world-left etc.
 class Vector3 {
 public:
-	float x, y, z;
+	F32 x, y, z;
 
 	//Inits zero vector
 	Vector3();
 
 	//Inits vector to default value
-	explicit Vector3(float defValue);
+	explicit Vector3(F32 defValue);
 
 	//Constructs vector from 3 components
-	Vector3(float x, float y, float z);
+	Vector3(F32 x, F32 y, F32 z);
 
 	//Constructs vector from x, y and z of Vector4
 	explicit Vector3(const Vector4& v);
 
 
 	//Returns the element in specified position
-	inline float getElement(unsigned int i) const {
+	inline F32 getElement(U32 i) const {
 		switch (i)
 		{
 		case 0: return x;
@@ -42,7 +43,7 @@ public:
 	};
 
 	//Sets the value of the element in specified position
-	inline void setElement(unsigned int i, float f) {
+	inline void setElement(U32 i, F32 f) {
 		switch (i)
 		{
 		case 0: x = f; return;
@@ -56,19 +57,19 @@ public:
 	};
 
 	//Returns the dot product between two vectors
-	inline float dot(const Vector3& v) const
+	inline F32 dot(const Vector3& v) const
 	{
 		return x*v.x + y * v.y + z * v.z;
 	}
 
 	//Returns the length of the vector. Has square root in it, use lenght2 when possible
-	inline float lenght() const
+	inline F32 lenght() const
 	{
 		return sqrtf(x*x + y*y + z*z);
 	}
 
 	//Returns the length squared. Cheaper that lenght()
-	inline float lenght2() const
+	inline F32 lenght2() const
 	{
 		return x*x + y*y + z*z;
 	}
@@ -76,7 +77,7 @@ public:
 	//Returns the normalized version of this vector
 	inline Vector3 normalized() const
 	{
-		float len = sqrtf(x*x + y*y + z*z);
+		F32 len = sqrtf(x*x + y*y + z*z);
 
 		return Vector3(x * len, y * len, z * len);
 
@@ -85,7 +86,7 @@ public:
 	//Normalizes this vector
 	inline void normalize()
 	{
-		float len = sqrtf(x*x + y*y + z*z);
+		F32 len = sqrtf(x*x + y*y + z*z);
 		x /= len;
 		y /= len;
 		z /= len;
@@ -103,9 +104,9 @@ public:
 
 	//Returns the cross product between 2 vectors
 	inline Vector3 cross(const Vector3& other) const {
-		float xx = (y * other.z) - (z * other.y);
-		float yy = (z * other.x) - (x * other.z);
-		float zz = (x * other.y) - (y * other.x);
+		F32 xx = (y * other.z) - (z * other.y);
+		F32 yy = (z * other.x) - (x * other.z);
+		F32 zz = (x * other.y) - (y * other.x);
 
 		return Vector3(xx, yy, zz);
 	};
@@ -124,13 +125,13 @@ public:
 	}
 
 	//Scaling operator
-	inline Vector3 operator *(float f) const
+	inline Vector3 operator *(F32 f) const
 	{
 		return Vector3(x * f, y * f, z * f);
 	}
 
 	//Scaling with division
-	inline Vector3 operator /(float f) const
+	inline Vector3 operator /(F32 f) const
 	{
 		if (f == 0.f) {
 			Math::mathError("ERROR: Tried to divide Vector3 by 0\n");
@@ -156,7 +157,7 @@ public:
 	}
 
 	//Compound scaling
-	inline void operator *=(float f)
+	inline void operator *=(F32 f)
 	{
 		x *= f;
 		y *= f;
@@ -164,7 +165,7 @@ public:
 	}
 
 	//Compound scaling with division
-	inline void operator /=(float f)
+	inline void operator /=(F32 f)
 	{
 		if (f == 0.f) {
 			Math::mathError("ERROR: Tried to divide-assign Vector3 by 0\n");
@@ -189,7 +190,7 @@ public:
 	}
 
 	//Returns a reference to the specified element
-	inline float& operator [](unsigned int i)
+	inline F32& operator [](U32 i)
 	{
 		switch (i)
 		{
@@ -199,7 +200,7 @@ public:
 
 		default:
 			Math::mathError("ERROR: Tried to get reference to element other than 0, 1 or 2 in Vector3\n");
-			return *((float*)(nullptr));
+			return *((F32*)(nullptr));
 		}
 	}
 
@@ -209,9 +210,9 @@ public:
 	}
 
 	//Returns an array containing all the elements
-	inline float* toArray()
+	inline F32* toArray()
 	{
-		return reinterpret_cast<float*>(this);
+		return reinterpret_cast<F32*>(this);
 	}
 
 
@@ -225,7 +226,7 @@ public:
 	static const Vector3 Vector3::WORLD_BACK;
 
 	//Scaling with scalar first
-	inline friend Vector3 operator *(float f, const Vector3& v) {
+	inline friend Vector3 operator *(F32 f, const Vector3& v) {
 		return v * f;
 
 	}

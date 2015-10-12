@@ -17,12 +17,12 @@ Vector3::Vector3()
 	x = y = z = 0;
 }
 
-Vector3::Vector3(float defValue)
+Vector3::Vector3(F32 defValue)
 {
 	x = y = z = defValue;
 }
 
-Vector3::Vector3(float x, float y, float z)
+Vector3::Vector3(F32 x, F32 y, F32 z)
 {
 	this->x = x; this->y = y; this->z = z;
 }

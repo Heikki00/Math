@@ -1,8 +1,8 @@
 #include "Matrix3.h"
 #include "Vector3.h"
 #include "MathMemoryManager.h"
-const float Matrix3::identityMatrix[9] = { 1,0,0,0,1,0,0,0,1 };
-const float Matrix3::zeroArray[9] = { 0 };
+const F32 Matrix3::identityMatrix[9] = { 1,0,0,0,1,0,0,0,1 };
+const F32 Matrix3::zeroArray[9] = { 0 };
 
 
 Matrix3::Matrix3()
@@ -10,7 +10,7 @@ Matrix3::Matrix3()
 #ifdef MATH_CUSTOM_MEMORY
 	elements = MathMemoryManager::newMat3();
 #else
-	elements = new float[9];
+	elements = new F32[9];
 #endif
 	identity();
 	
@@ -18,12 +18,12 @@ Matrix3::Matrix3()
 }
 
 
-Matrix3::Matrix3(float f0, float f1, float f2, float f3, float f4, float f5, float f6, float f7, float f8)
+Matrix3::Matrix3(F32 f0, F32 f1, F32 f2, F32 f3, F32 f4, F32 f5, F32 f6, F32 f7, F32 f8)
 {
 #ifdef MATH_CUSTOM_MEMORY
 	elements = MathMemoryManager::newMat3();
 #else
-	elements = new float[9];
+	elements = new F32[9];
 #endif
 
 	elements[0] = f0;
@@ -45,9 +45,9 @@ Matrix3::Matrix3(const Matrix3& m)
 #ifdef MATH_CUSTOM_MEMORY
 	elements = MathMemoryManager::newMat3();
 #else
-	elements = new float[9];
+	elements = new F32[9];
 #endif
-	memcpy(elements, m.elements, sizeof(float) * 9);
+	memcpy(elements, m.elements, sizeof(F32) * 9);
 	
 }
 
@@ -61,7 +61,7 @@ Matrix3::Matrix3(Matrix3&& m)
 Matrix3& Matrix3::operator=(const Matrix3& m)
 {
 	
-	memcpy(elements, m.elements, sizeof(float) * 9);
+	memcpy(elements, m.elements, sizeof(F32) * 9);
 	return *this;
 }
 
@@ -110,7 +110,7 @@ Matrix3 Matrix3::operator*(const Matrix3& m) const
 
 }
 
-Matrix3 Matrix3::operator*(float f) const
+Matrix3 Matrix3::operator*(F32 f) const
 {
 	Matrix3 res = *this;
 
@@ -161,7 +161,7 @@ void Matrix3::operator*=(const Matrix3& m)
 
 }
 
-void Matrix3::operator*=(float f)
+void Matrix3::operator*=(F32 f)
 {
 	elements[0] *= f;
 	elements[1] *= f;
@@ -202,12 +202,12 @@ void Matrix3::operator-=(const Matrix3& m)
 
 bool Matrix3::operator==(const Matrix3& m) const
 {
-	return memcmp(elements, zeroArray, sizeof(float) * 9) == 0;
+	return memcmp(elements, zeroArray, sizeof(F32) * 9) == 0;
 }
 
 bool Matrix3::operator!=(const Matrix3& m) const
 {
-	return memcmp(elements, zeroArray, sizeof(float) * 9) != 0;
+	return memcmp(elements, zeroArray, sizeof(F32) * 9) != 0;
 }
 
 
@@ -229,25 +229,25 @@ Vector3 Matrix3::operator*(const Vector3& v) const
 
 void Matrix3::identity()
 {
-	memcpy(elements, identityMatrix, sizeof(float) * 9);
+	memcpy(elements, identityMatrix, sizeof(F32) * 9);
 }
 
 bool Matrix3::isIdentity() const
 {
-	return memcmp(elements, identityMatrix, sizeof(float) * 9) == 0;
+	return memcmp(elements, identityMatrix, sizeof(F32) * 9) == 0;
 }
 
 bool Matrix3::isZero() const
 {
-	return memcmp(elements, zeroArray, sizeof(float) * 9) == 0;
+	return memcmp(elements, zeroArray, sizeof(F32) * 9) == 0;
 }
 
-float* Matrix3::toArray() const
+F32* Matrix3::toArray() const
 {
 	return elements;
 }
 
-float Matrix3::getElement(unsigned int r, unsigned int c) const
+F32 Matrix3::getElement(U32 r, U32 c) const
 {
 	if (r < 3 && c < 3) {
 		return elements[(r * 3) + c];
@@ -258,7 +258,7 @@ float Matrix3::getElement(unsigned int r, unsigned int c) const
 	}
 }
 
-float Matrix3::getElement(unsigned int pos) const
+F32 Matrix3::getElement(U32 pos) const
 {
 	if (pos < 9) return elements[pos];
 	else {
@@ -267,7 +267,7 @@ float Matrix3::getElement(unsigned int pos) const
 	}
 }
 
-void Matrix3::setElement(unsigned int r, unsigned int c, float val)
+void Matrix3::setElement(U32 r, U32 c, F32 val)
 {
 	if (r < 3 && c < 3) {
 		elements[(r * 3) + c] = val;
@@ -277,7 +277,7 @@ void Matrix3::setElement(unsigned int r, unsigned int c, float val)
 	}
 }
 
-void Matrix3::setElement(unsigned int pos, float val)
+void Matrix3::setElement(U32 pos, F32 val)
 {
 	if (pos < 9) elements[pos] = val;
 	else {
@@ -285,7 +285,7 @@ void Matrix3::setElement(unsigned int pos, float val)
 	}
 }
 
-void Matrix3::scale(float f)
+void Matrix3::scale(F32 f)
 {
 	elements[0] *= f;
 	elements[1] *= f;
@@ -298,7 +298,7 @@ void Matrix3::scale(float f)
 	elements[8] *= f;
 }
 
-void Matrix3::rotate(const Vector3& axis, float angle)
+void Matrix3::rotate(const Vector3& axis, F32 angle)
 {
 	Matrix3 m;
 
@@ -307,12 +307,12 @@ void Matrix3::rotate(const Vector3& axis, float angle)
 		return;
 	}
 
-	float hAng = angle / 2.0f;
+	F32 hAng = angle / 2.0f;
 
-	float x = axis.x * sinf(hAng);
-	float y = axis.y * sinf(hAng);
-	float z = axis.z * sinf(hAng);
-	float w = cosf(hAng);
+	F32 x = axis.x * sinf(hAng);
+	F32 y = axis.y * sinf(hAng);
+	F32 z = axis.z * sinf(hAng);
+	F32 w = cosf(hAng);
 
 
 	m.setElement(0, 0, 1 - 2 * (y * y) - 2 * (z * z)); m.setElement(0, 1, 2 * x * y - 2 * z * w); m.setElement(0, 2, 2 * x * z + 2 * y * w);
@@ -324,7 +324,7 @@ void Matrix3::rotate(const Vector3& axis, float angle)
 	this->operator*=(m);
 }
 
-void Matrix3::rotateX(float angle)
+void Matrix3::rotateX(F32 angle)
 {
 	this->operator*=(Matrix3(1, 0, 0,
 		0, cosf(angle), -sinf(angle),
@@ -332,7 +332,7 @@ void Matrix3::rotateX(float angle)
 		));
 }
 
-void Matrix3::rotateY(float angle)
+void Matrix3::rotateY(F32 angle)
 {
 	this->operator*=(Matrix3(cosf(angle), 0, sinf(angle),
 		0, 1, 0,
@@ -340,7 +340,7 @@ void Matrix3::rotateY(float angle)
 		));
 }
 
-void Matrix3::rotateZ(float angle)
+void Matrix3::rotateZ(F32 angle)
 {
 	this->operator*=(Matrix3(cosf(angle), -sinf(angle), 0,
 		sinf(angle), cosf(angle), 0,
@@ -377,7 +377,7 @@ Matrix3 Matrix3::inverse() const
 	m.elements[8] = getElement(0, 0) * getElement(1, 1) - getElement(1, 0) * getElement(0, 1);
 	cof = m;
 	
-	float det = elements[0] * m.elements[0] - elements[1] * m.elements[1] + elements[2] * m.elements[2];
+	F32 det = elements[0] * m.elements[0] - elements[1] * m.elements[1] + elements[2] * m.elements[2];
 	
 	m.transpose();
 	

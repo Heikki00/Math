@@ -8,12 +8,12 @@ Vector2::Vector2()
 }
 
 
-Vector2::Vector2(float x, float y)
+Vector2::Vector2(F32 x, F32 y)
 {
 	this->x = x; this->y = y;
 }
 
-Vector2::Vector2(float defValue)
+Vector2::Vector2(F32 defValue)
 {
 	x = y = defValue;
 }

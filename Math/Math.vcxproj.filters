@@ -48,9 +48,6 @@
     <ClCompile Include="MathError.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="DareMath.cpp">
-      <Filter>Math\Vector</Filter>
-    </ClCompile>
     <ClCompile Include="MathMemoryManager.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -80,9 +77,6 @@
     <ClInclude Include="MathError.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="DareMath.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="DataTypedefs.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -93,6 +87,9 @@
       <Filter>Math\Vector</Filter>
     </ClInclude>
     <ClInclude Include="MathMemoryManager.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="FestusMath.h">
       <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,20 +2,22 @@
 #include <math.h>
 #include <iostream>
 #include "MathError.h"
+#include "DataTypedefs.h"
+
 class Vector3;
 class Matrix4;
 
-//Class that represent Quaternion. It includes 4 floats, and is intended to represent 3D rotations.
+//Class that represent Quaternion. It includes 4 F32s, and is intended to represent 3D rotations.
 //Is not child nor has child classes.
 class Quaternion {
 public:
 
 	//Constructs an identity Quaternion
 	Quaternion() { x = y = z = 0; w = 1; }
-	Quaternion(float x, float y, float z, float w) { this->x = x; this->y = y; this->z = z; this->w = w; }
+	Quaternion(F32 x, F32 y, F32 z, F32 w) { this->x = x; this->y = y; this->z = z; this->w = w; }
 
 	//Constructs a Quaternion that represents rotation of angle around axis
-	Quaternion(const Vector3& axis, float angle) { x = y = z = 0; w = 1; axisAngle(axis, angle); }
+	Quaternion(const Vector3& axis, F32 angle) { x = y = z = 0; w = 1; axisAngle(axis, angle); }
 
 	//Copy constructor
 	Quaternion(const Quaternion& q) { x = q.x; y = q.y; z = q.z; w = q.w; }
@@ -43,12 +45,12 @@ public:
 	}
 
 	//Scaling operator
-	friend Quaternion operator*(float f, const Quaternion& q) {
+	friend Quaternion operator*(F32 f, const Quaternion& q) {
 		return Quaternion(f * q.x, f * q.y, f * q.z, f * q.w);
 	}
 
 	//Scaling operator
-	Quaternion operator /(float f) const {
+	Quaternion operator /(F32 f) const {
 		if (f == 0) {
 			Math::mathError("ERROR: Tried to divide a Quaternion by 0");
 			return Quaternion();
@@ -98,17 +100,17 @@ public:
 
 
 	//Returns the dot product of Quaternion
-	float dot(const Quaternion& q) const { return x * q.x + y * q.y + z * q.z + w * q.w; }
+	F32 dot(const Quaternion& q) const { return x * q.x + y * q.y + z * q.z + w * q.w; }
 
 	//Sets Quaternion to represent rotation of angle around axis. Wipes out old values.
-	void axisAngle(const Vector3& axis, float angle);
+	void axisAngle(const Vector3& axis, F32 angle);
 
 	//Returns the lenght of quaternion. Don't try to think about it too much...
-	inline float lenght() const { return sqrtf(x*x + y*y + z*z + w*w); }
+	inline F32 lenght() const { return sqrtf(x*x + y*y + z*z + w*w); }
 
 	//Normalizes Quaternion (divides it's components by it's lenght)
 	inline void normalize() {
-		float l = lenght();
+		F32 l = lenght();
 
 		x /= l;
 		y /= l;
@@ -120,7 +122,7 @@ public:
 
 	//Returns normalized version of this Quaternion
 	inline Quaternion normalized() const {
-		float l = lenght();
+		F32 l = lenght();
 		return Quaternion(x / l, y / l, z / l, w / l);
 	}
 
@@ -132,7 +134,7 @@ public:
 
 	//Returns the inverse of this Quaternion
 	inline Quaternion inverse() const {
-		float len = lenght();
+		F32 len = lenght();
 		return conjugate() / (x*x + y*y + z*z + w*w);
 	}
 
@@ -151,7 +153,7 @@ public:
 	Vector3 getForw() const;
 	Vector3 getBack() const;
 
-	float x, y, z, w;
+	F32 x, y, z, w;
 
 
 
