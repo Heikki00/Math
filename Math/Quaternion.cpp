@@ -48,6 +48,16 @@ Vector3 Quaternion::axis() const
 	return Vector3(x, y, z);
 }
 
+const F32* Quaternion::toArray() const
+{
+	return reinterpret_cast<const F32*>(this);
+}
+
+F32* Quaternion::toArray()
+{
+	return reinterpret_cast<F32*>(this);
+}
+
 Vector3 Quaternion::getLeft() const
 {
 	return this->operator*(Vector3::WORLD_LEFT);

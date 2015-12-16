@@ -1,5 +1,4 @@
 #pragma once
-#define MATH_CUSTOM_MEMORY
 
 
 #include <math.h>
@@ -25,6 +24,17 @@ namespace Math {
 	inline void initMemory(U32 mat4, U32 Mat4Inc, U32 mat3, U32 mat3Inc) {
 		MathMemoryManager::init(mat4, Mat4Inc, mat3, mat3Inc);
 	}
+
+	inline Matrix3* createSafeMatrix3() {
+		return reinterpret_cast<Matrix3*>(new float[9]);
+
+	}
+
+	inline Matrix4* createSafeMatrix4() {
+		return reinterpret_cast<Matrix4*>(new float[16]);
+	
+	}
+
 
 
 }

@@ -138,6 +138,13 @@ public:
 		return conjugate() / (x*x + y*y + z*z + w*w);
 	}
 
+	//Returns Quaternions variables as an array
+	const F32* toArray() const;
+
+	//Returns Quaternions variables as an array
+	F32* toArray();
+
+
 	//Operator for printing Quaternions
 	friend std::ostream& operator << (std::ostream& os, const Quaternion& q) {
 		os << std::fixed << "Quaternion: (" << q.x << ", " << q.y << ", " << q.z << ", " << q.w << ")" << std::endl;

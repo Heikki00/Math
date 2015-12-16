@@ -21,7 +21,7 @@ public:
 	//Constructs matrix from F32 array. Copies the array
 	Matrix4(F32* f);
 
-	//Constructs matrix from F32 array. Takes ownership of the pointer, assings it to null
+	//Constructs matrix from F32 array. Takes ownership of the pointer, assigns it to null
 	Matrix4(F32** f);
 
 	//Copy constructor
@@ -93,7 +93,10 @@ public:
 
 
 	//Returns pointer to array of elements of this matrix
-	F32* toArray() const;
+	const F32* toArray() const;
+
+	//Returns pointer to array of elements of this matrix
+	F32* toArray();
 
 	//Returns element at row r and column c
 	F32 getElement(U32 r, U32 c) const;

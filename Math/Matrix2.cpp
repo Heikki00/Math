@@ -159,12 +159,17 @@ bool Matrix2::isZero() const
 	return memcmp(elements, zeroArray, sizeof(F32) * 4) == 0;
 }
 
-
+const F32* Matrix2::toArray() const
+{
+	return &elements[0];
+}
 
 F32* Matrix2::toArray()
 {
 	return &elements[0];
 }
+
+
 
 F32 Matrix2::getElement(U32 r, U32 c) const
 {

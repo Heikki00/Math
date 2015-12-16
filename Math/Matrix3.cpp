@@ -242,7 +242,12 @@ bool Matrix3::isZero() const
 	return memcmp(elements, zeroArray, sizeof(F32) * 9) == 0;
 }
 
-F32* Matrix3::toArray() const
+const F32* Matrix3::toArray() const
+{
+	return elements;
+}
+
+F32* Matrix3::toArray()
 {
 	return elements;
 }

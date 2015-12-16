@@ -207,13 +207,15 @@ public:
 		return elements[i];
 	}
 
-	F32* toArray() const
+	const F32* toArray() const
 	{
-		F32* arr = new F32[t];
-		memcpy(arr, elements, t * sizeof(F32));
-		return arr;
+		return elements;
 	}
 
+	F32* toArray()
+	{
+		return elements;
+	}
 
 	friend VectorT<t> operator *(F32 f, const VectorT<t>& v) {
 		return v * f;

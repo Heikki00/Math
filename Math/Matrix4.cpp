@@ -133,7 +133,12 @@ bool Matrix4::isZero() const
 	return memcmp(elements, zeroArray, sizeof(F32) * 16) == 0;
 }
 
-F32* Matrix4::toArray() const
+const F32* Matrix4::toArray() const
+{
+	return elements;
+}
+
+F32* Matrix4::toArray()
 {
 	return elements;
 }
@@ -366,7 +371,7 @@ Matrix4 Matrix4::operator*(F32 f) const
 
 Matrix4 Matrix4::operator*(const Matrix4& m) const
 {
-
+	if (m.isIdentity()) return *this;
 	Matrix4 res;
 
 	res.setElement(0, 0, getElement(0, 0) * m[0][0] + getElement(0, 1) * m[1][0] + getElement(0, 2) * m[2][0] + getElement(0, 3) * m[3][0]);

@@ -87,7 +87,10 @@ public:
 
 
 	//Returns pointer to array of elements of this matrix
-	F32* toArray() const;
+	const F32* toArray() const;
+
+	//Returns pointer to array of elements of this matrix
+	F32* toArray();
 
 	//Returns element at row r and column c
 	F32 getElement(U32 r, U32 c) const;

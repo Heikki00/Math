@@ -71,6 +71,9 @@ public:
 
 
 	//Returns pointer to array of elements of this matrix
+	const F32* toArray() const;
+
+	//Returns pointer to array of elements of this matrix
 	F32* toArray();
 
 	//Returns element at row r and column c

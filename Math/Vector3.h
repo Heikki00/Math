@@ -214,7 +214,12 @@ public:
 	{
 		return reinterpret_cast<F32*>(this);
 	}
-
+	
+	//Returns an array containing all the elements
+	inline const F32* toArray() const
+	{
+		return reinterpret_cast<const F32*>(this);
+	}
 
 
 

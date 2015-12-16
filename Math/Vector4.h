@@ -208,7 +208,11 @@ public:
 		return reinterpret_cast<F32*>(this);
 	}
 
-
+	//Returns an array containing all the elements
+	inline const F32* toArray() const
+	{
+		return reinterpret_cast<const F32*>(this);
+	}
 
 	//Scaling with scalar first
 	inline friend Vector4 operator *(F32 f, const Vector4& v) {

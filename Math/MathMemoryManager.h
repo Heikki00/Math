@@ -1,5 +1,6 @@
 #pragma once
 
+#define MATH_CUSTOM_MEMORY
 #include "DataTypedefs.h"
 #include <assert.h>
 
@@ -8,6 +9,8 @@
 
 
 
+
+#ifdef MATH_CUSTOM_MEMORY
 class MathMemoryManager {
 public:
 
@@ -36,7 +39,7 @@ public:
 	}
 
 	static void deleteMat4(F32* p) {
-		pool4->free(p);
+		if(p) pool4->free(p);
 	}
 
 	static F32* newMat3() {
@@ -44,7 +47,7 @@ public:
 	}
 
 	static void deleteMat3(F32* p) {
-		pool3->free(p);
+		if (p) pool3->free(p);
 	}
 
 
@@ -55,6 +58,7 @@ private:
 };
 
 
+#endif
 
 
 
