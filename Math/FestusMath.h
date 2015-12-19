@@ -21,15 +21,24 @@
 
 namespace Math {
 	
+	//Inits the memory pool of Math, that is used with Matrix4 and Matrix3.
+	//Parameters are initial amounts of objects to allocate space for, and size of the first 
+	//increase of size, after witch the size just doubles
 	inline void initMemory(U32 mat4, U32 Mat4Inc, U32 mat3, U32 mat3Inc) {
 		MathMemoryManager::init(mat4, Mat4Inc, mat3, mat3Inc);
 	}
 
+	//Deletes the memory pool(s), call initMemory before using again
+	inline void freeMemory() {
+		MathMemoryManager::free();
+	}
+
+	//Creates Matrix3 without the use of memory pool.
 	inline Matrix3* createSafeMatrix3() {
 		return reinterpret_cast<Matrix3*>(new float[9]);
 
 	}
-
+	//Creates Matrix4 without the use of memory pool.
 	inline Matrix4* createSafeMatrix4() {
 		return reinterpret_cast<Matrix4*>(new float[16]);
 	

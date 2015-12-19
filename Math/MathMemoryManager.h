@@ -19,11 +19,9 @@ public:
 		assert(mat4 != 0 || mat4Inc != 0 || mat3 != 0 || mat3Inc != 0);
 
 
-		pool4 = new boost::pool<>(sizeof(F32) * 16, mat4Inc);
+		pool4 = new boost::pool<>(sizeof(F32) * 16 * mat4, mat4Inc * sizeof(F32) * 16);
 
-		pool3 = new boost::pool<>(sizeof(F32) * 9, mat3Inc);
-
-
+		pool3 = new boost::pool<>(sizeof(F32) * 9 * mat3, mat3Inc * sizeof(F32) * 9);
 
 
 
